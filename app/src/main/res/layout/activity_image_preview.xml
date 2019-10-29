@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ImagePreviewActivity">
+
+    <ImageView
+        android:id="@+id/imagePreviewIV"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentLocFrL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/no_image_icon" />
+
+    <ImageButton
+        android:id="@+id/undoBTN"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/button_background"
+        android:onClick="undo"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/saveBTN"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_undo" />
+
+    <ImageButton
+        android:id="@+id/saveBTN"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_background"
+        android:onClick="save"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/undoBTN"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/layersBTN"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_save" />
+
+    <ImageButton
+        android:id="@+id/layersBTN"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_background"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/saveBTN"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_layers" />
+
+    <HorizontalScrollView
+        android:id="@+id/EditingMenuListHSCV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/colorListBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/hideBTN"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:onClick="hideCurrentFragment"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_hide" />
+
+            <ImageButton
+                android:id="@+id/filtersBTN"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:background="@drawable/button_background"
+                android:onClick="addFilter"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_filter" />
+
+            <ImageButton
+                android:id="@+id/changeColourBTN"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:onClick="colourChange"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_color" />
+
+            <ImageButton
+                android:id="@+id/addTextBTN"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:onClick="addText"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_text_edit" />
+
+            <ImageButton
+                android:id="@+id/scaleBTN"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_crop" />
+
+            <ImageButton
+                android:id="@+id/rotateBTN"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:onClick="rotateImage"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_rotate" />
+
+            <ImageButton
+                android:id="@+id/drawBTN"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_draw" />
+
+            <ImageButton
+                android:id="@+id/gradientBTN"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:onClick="addGradient"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_gradient" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <FrameLayout
+        android:id="@+id/fragmentLocFrL"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/EditingMenuListHSCV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/pointerIV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/imagePreviewIV"
+        app:layout_constraintStart_toStartOf="@+id/imagePreviewIV"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_pointer" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
