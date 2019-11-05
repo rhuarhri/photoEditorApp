@@ -48,10 +48,22 @@ class SaveImageHandler (private val context : Context) {
             suffix,
             storageDir /* directory */
         ).apply {
-            // Save a file: path for use with ACTION_VIEW intents
             savedPhotoPath = absolutePath
         }
 
+    }
+
+    @Throws(IOException::class)
+    fun createCustomImageFile(name : String, type : String) : File
+    {
+        val storageDir: File = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        return File.createTempFile(
+            name,
+            type,
+            storageDir /* directory */
+        ).apply {
+            savedPhotoPath = absolutePath
+        }
     }
 
     fun savePhoto(photo : Bitmap)

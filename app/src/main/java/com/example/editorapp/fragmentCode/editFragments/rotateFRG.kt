@@ -1,9 +1,8 @@
-package com.example.editorapp.fragmentCode
+package com.example.editorapp.fragmentCode.editFragments
 
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,7 +39,9 @@ class rotateFRG : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val rotateSB : SeekBar = view.findViewById(R.id.rotateSB)
+        val rotateSB : SeekBar = view.findViewById(R.id.selectionSB)
+        rotateSB.max = 360
+        rotateSB.progress = 0
 
         rotateSB.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -62,13 +63,8 @@ class rotateFRG : Fragment() {
 
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
 
         })
 
@@ -80,8 +76,5 @@ class rotateFRG : Fragment() {
 
         }
     }
-
-    //TODO find a way for the fragment to forget progress
-
 
 }

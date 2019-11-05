@@ -1,4 +1,4 @@
-package com.example.editorapp.fragmentCode
+package com.example.editorapp.fragmentCode.editFragments
 
 import android.app.Activity
 import android.content.Context
@@ -7,7 +7,6 @@ import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.editorapp.R
-import kotlin.math.roundToInt
 
 class ColourChangeFRG : Fragment()
 {

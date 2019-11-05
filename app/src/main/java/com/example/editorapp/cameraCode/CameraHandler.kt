@@ -1,6 +1,12 @@
 package com.example.editorapp.cameraCode
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.ImageFormat.JPEG
 import android.graphics.Matrix
+import android.media.Image
+import android.provider.MediaStore
 import android.util.Rational
 import android.util.Size
 import android.view.Surface
@@ -84,6 +90,19 @@ class CameraHandler(Owner : LifecycleOwner, CameraView : TextureView) {
         }.build()
 
         return Preview(previewConfig)
+    }
+
+    private fun createImageAnalyser()
+    {
+        val imageConfig = ImageAnalysisConfig.Builder().setTargetResolution(Size(1280, 720))
+            .build()
+
+        val imageAnalysis = ImageAnalysis(imageConfig)
+        imageAnalysis.setAnalyzer { image: ImageProxy, rotation: Int ->
+
+
+        }
+
     }
 
     private fun updatePreview(newPreview : Preview)

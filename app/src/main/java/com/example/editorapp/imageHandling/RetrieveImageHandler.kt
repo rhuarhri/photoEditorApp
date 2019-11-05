@@ -27,31 +27,92 @@ class RetrieveImageHandler(private val context : Context) {
             inJustDecodeBounds = true
 
 
-            //val photoW: Int = outWidth
-            //val photoH: Int = outHeight
+            val photoW: Int = outWidth
+            val photoH: Int = outHeight
 
             // Determine how much to scale down the image
-            //val scaleFactor: Int = Math.min(photoW / width, photoH / height)
+            val scaleFactor: Int = Math.min(photoW / width, photoH / height)
 
             // Decode the image file into a Bitmap sized to fill the View
             inJustDecodeBounds = false
-            //inSampleSize = scaleFactor
+            inSampleSize = scaleFactor
 
         }
 
         return options
     }
 
-
-    fun getBitmapFromFile(filePath : String?, height : Int, width : Int) : Bitmap
+    private fun fromFile(filePath : String?, height : Int?, width : Int?) : Bitmap
     {
+        var default : Bitmap? = null
+        var options : BitmapFactory.Options? = null
+
+        if (height != null || width != null)
+        {
+            default = setDefault(height!!, width!!)
+            options = imageOptions(height, width)
+        }
+        else
+        {
+            default = setDefault(100, 100)
+        }
+
+        if (filePath == "" || filePath == null)
+        {
+            return default
+        }
+        else
+        {
+            val imageFile = File(filePath)
+
+            val foundImage : Bitmap? = BitmapFactory.decodeStream(FileInputStream(imageFile) as InputStream?, null, options)
+
+            if (foundImage == null)
+            {
+                return default
+            }
+            else
+            {
+                return foundImage
+            }
+        }
+    }
+
+    fun getBitmapFromFile(filePath : String?) : Bitmap
+    {
+        /*
+        if (filePath == "" || filePath == null)
+        {
+            return setDefault(100, 100)
+        }else{
+            val imageFile = File(filePath)
+
+            val foundImage : Bitmap? = BitmapFactory.decodeStream(FileInputStream(imageFile) as InputStream?, null, null)
+
+            if (foundImage == null)
+            {
+                return setDefault(100, 100)
+            }
+            else
+            {
+                return foundImage
+            }
+        }*/
+
+        return fromFile(filePath, null, null)
+
+    }
+
+    fun formatBitmapFromFile(filePath: String?, height: Int, width: Int) : Bitmap
+    {
+        /*
         if (filePath == "" || filePath == null)
         {
             return setDefault(height, width)
         }else{
             val imageFile = File(filePath)
 
-            val foundImage : Bitmap? = BitmapFactory.decodeStream(FileInputStream(imageFile), null, imageOptions(height, width))
+            val foundImage : Bitmap? = BitmapFactory.decodeStream(FileInputStream(imageFile) as InputStream?, null, imageOptions(height, width))
 
             if (foundImage == null)
             {
@@ -61,11 +122,72 @@ class RetrieveImageHandler(private val context : Context) {
             {
                 return foundImage
             }
-        }
+        }*/
+
+        return fromFile(filePath, height, width)
 
     }
 
+    private fun fromResource(location : Int, height: Int?, width: Int?) : Bitmap
+    {
+        var default : Bitmap? = null
+        var options : BitmapFactory.Options? = null
 
+        if (height != null || width != null)
+        {
+            default = setDefault(height!!, width!!)
+            options = imageOptions(height, width)
+        }
+        else
+        {
+            default = setDefault(100, 100)
+        }
+
+        val foundImage : Bitmap? = BitmapFactory.decodeResource(context.resources, location, options)
+        if (foundImage == null)
+        {
+            return default
+        }
+        else
+        {
+            return foundImage
+        }
+    }
+
+    fun getBitmapFromResoucres(location : Int) : Bitmap
+    {
+        /*
+        val foundImage : Bitmap? = BitmapFactory.decodeResource(context.resources, location, null)
+        if (foundImage == null)
+        {
+            return setDefault(100, 100)
+        }
+        else
+        {
+            return foundImage
+        }*/
+
+        return fromResource(location, null, null)
+    }
+
+    fun formatBitmapFromResources(location : Int, height : Int, width : Int) : Bitmap
+    {
+        /*
+        val foundImage : Bitmap? = BitmapFactory.decodeResource(context.resources, location, imageOptions(height, width))
+        if (foundImage == null)
+        {
+            return setDefault(height, width)
+        }
+        else
+        {
+            return foundImage
+        }*/
+
+        return fromResource(location, height, width)
+    }
+
+
+    /*
     fun getBitmapFromURL(imageURL : String?, height : Int, width : Int) : Bitmap?
     {
         return if (imageURL == "" || imageURL == null) {
@@ -80,7 +202,7 @@ class RetrieveImageHandler(private val context : Context) {
 
             BitmapFactory.decodeStream(inStream, null, imageOptions(height, width))
         }
-    }
+    }*/
 
 
     //returns default image if file or input stream is empty

@@ -7,20 +7,21 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.fragment.app.FragmentTransaction
+import com.example.editorapp.fragmentCode.welcomeFragment.AcceptImageFRG
+import com.example.editorapp.fragmentCode.welcomeFragment.FromWelcomeFragment
 import com.example.editorapp.imageHandling.EditHistoryManger
 import com.example.editorapp.imageHandling.RetrieveImageHandler
 import com.example.editorapp.imageHandling.SaveImageHandler
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.uiThread
 
-class WelcomeActivity : AppCompatActivity() {
+class WelcomeActivity : AppCompatActivity(), FromWelcomeFragment{
 
-    private lateinit var imagePreviewIV : ImageView
-    private lateinit var findBTN : Button
-    private lateinit var doneBTN : Button
 
     private val requestCode : Int = 111
 
@@ -30,8 +31,9 @@ class WelcomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
 
-        imagePreviewIV = findViewById(R.id.imagePreviewIV)
+        //imagePreviewIV = findViewById(R.id.imagePreviewIV)
 
+        /*
         async {
 
             //val getImage : RetrieveImageHandler = RetrieveImageHandler(applicationContext)
@@ -41,20 +43,14 @@ class WelcomeActivity : AppCompatActivity() {
 
             uiThread {
                 if (chosenImage != null){
-                imagePreviewIV.setImageBitmap(chosenImage!!)}
+                //imagePreviewIV.setImageBitmap(chosenImage!!)
+                    }
             }
-        }
+        }*/
 
 
-        findBTN = findViewById(R.id.findBTN)
-        findBTN.setOnClickListener {
-            val chooser = Intent()
-                .setType("image/*")
-                .setAction(Intent.ACTION_GET_CONTENT)
 
-            startActivityForResult(Intent.createChooser(chooser, "Select a image"), requestCode)
-        }
-
+/*
         doneBTN = findViewById(R.id.doneBTN)
         doneBTN.setOnClickListener {
 
@@ -71,7 +67,40 @@ class WelcomeActivity : AppCompatActivity() {
             }
         }
 
+ */
+
     }
+
+    public fun openCamera(view: View)
+    {
+        val goTo : Intent = Intent(applicationContext, MainActivity::class.java)
+        startActivity(goTo)
+    }
+
+    public fun findImage(view: View)
+    {
+        val chooser = Intent()
+            .setType("image/*")
+            .setAction(Intent.ACTION_GET_CONTENT)
+
+        startActivityForResult(Intent.createChooser(chooser, "Select a image"), requestCode)
+    }
+
+    public fun getSavedImage(view: View)
+    {
+        val acceptImageFRG : AcceptImageFRG = AcceptImageFRG()
+
+        val fragIn : Bundle = Bundle()
+        fragIn.putString("function", "saved")
+
+        acceptImageFRG.arguments = fragIn
+
+        val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
+        openFragment.replace(R.id.acceptImageFRGLoc, acceptImageFRG)
+
+        openFragment.commit()
+    }
+
 
     private var chosenImage: Bitmap? = null
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -82,26 +111,21 @@ class WelcomeActivity : AppCompatActivity() {
             when(requestCode)
             {
                 requestCode -> {
-                    val imageLoc = data?.data
-                    if(imageLoc != null) {
 
-                        val contentResolver = this.contentResolver
+                    val acceptImageFRG : AcceptImageFRG = AcceptImageFRG()
 
-                        async {
+                    val imageLoc : String = data?.data.toString()
 
-                             chosenImage = MediaStore.Images.Media.getBitmap(
-                                contentResolver,
-                                imageLoc
-                            )
+                    val fragIn : Bundle = Bundle()
+                    fragIn.putString("image", imageLoc)
+                    fragIn.putString("function", "search")
 
-                            uiThread {
-                                imagePreviewIV.setImageBitmap(chosenImage)
-                            }
-                        }
+                    acceptImageFRG.arguments = fragIn
 
+                    val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
+                    openFragment.replace(R.id.acceptImageFRGLoc, acceptImageFRG)
 
-                        //imagePreviewIV.setImageURI(imageLoc)
-                    }
+                    openFragment.commit()
                 }
             }
         }

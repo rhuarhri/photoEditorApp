@@ -52,6 +52,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/button_background"
+        android:onClick="layersNav"
         android:scaleType="fitCenter"
         app:layout_constraintEnd_toStartOf="@+id/saveBTN"
         app:layout_constraintHorizontal_bias="0.5"
@@ -64,7 +65,7 @@
         android:id="@+id/EditingMenuListHSCV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorListBackground"
+        android:background="@color/primaryColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -83,6 +84,16 @@
                 android:onClick="hideCurrentFragment"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/ic_hide" />
+
+            <ImageButton
+                android:id="@+id/selectBTN"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:onClick="selectImage"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_select" />
 
             <ImageButton
                 android:id="@+id/filtersBTN"
@@ -114,11 +125,12 @@
                 app:srcCompat="@drawable/ic_text_edit" />
 
             <ImageButton
-                android:id="@+id/scaleBTN"
+                android:id="@+id/cropBTN"
                 android:layout_width="60dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/button_background"
+                android:onClick="cropImage"
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/ic_crop" />
 
@@ -151,6 +163,16 @@
                 android:scaleType="fitCenter"
                 app:srcCompat="@drawable/ic_gradient" />
 
+            <ImageButton
+                android:id="@+id/blurBTN"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/button_background"
+                android:onClick="blurImage"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/ic_blur" />
+
         </LinearLayout>
     </HorizontalScrollView>
 
@@ -173,5 +195,16 @@
         app:layout_constraintStart_toStartOf="@+id/imagePreviewIV"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_pointer" />
+
+    <FrameLayout
+        android:id="@+id/layerFRGLocationFrl"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentLocFrL"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layersBTN">
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

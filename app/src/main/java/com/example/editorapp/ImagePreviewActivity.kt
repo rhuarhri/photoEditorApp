@@ -1,29 +1,22 @@
 package com.example.editorapp
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.net.Uri
+import android.content.Intent
+import android.graphics.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
-import androidx.core.net.toUri
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.example.editorapp.fragmentCode.*
-import com.example.editorapp.imageEditing.ImageFilters
+import com.example.editorapp.fragmentCode.editFragments.*
+import com.example.editorapp.imageEditing.*
 import com.example.editorapp.imageHandling.EditHistoryManger
 import com.example.editorapp.imageHandling.RetrieveImageHandler
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.uiThread
-import java.net.URI
 import kotlin.math.roundToInt
 
 class ImagePreviewActivity : AppCompatActivity(), FromFragment {
@@ -34,11 +27,8 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
     private var positionY : Int = 0
     private var positionX : Int = 0
 
-    private lateinit var undoBTN : Button
-    private lateinit var saveBTN : Button
-
     private lateinit var currentImage : Bitmap
-    private lateinit var currentImageCopy : Bitmap
+    //private lateinit var currentImageCopy : Bitmap
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +45,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
         val getImage : RetrieveImageHandler = RetrieveImageHandler(applicationContext)
 
-        currentImage = getImage.getBitmapFromFile(photoLoc, photoH, photoW)//MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri)
+        currentImage = getImage.getBitmapFromFile(photoLoc)//MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoUri)
 
         editHistory = EditHistoryManger(applicationContext, photoH, photoW)
 
@@ -109,38 +99,83 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
         //mScaleDetector.onTouchEvent(event)
 
+        if (selector.selectionInProgress()) {
+            selector.setHeightAndWidth((positionX), (positionY + 200))
+            displaySelection()
+        }
+
         return true
     }
 
 
-
-    public fun save(view : View)
+    fun save(view : View)
     {
-
+        val goTo : Intent = Intent(applicationContext, SaveImageActivity::class.java)
+        startActivity(goTo)
     }
 
     private lateinit var editHistory : EditHistoryManger
-    public fun undo(view : View)
+    fun undo(view : View)
     {
         currentImage = editHistory.undo()!!
         imagePreviewIV.setImageBitmap(currentImage)
 
     }
 
-    public fun addFilter(view : View)
+    private val layerFRG : layerFRG = layerFRG()
+    fun layersNav(view : View)
     {
+        val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
+        openFragment.replace(R.id.layerFRGLocationFrl, layerFRG)
+        openFragment.commit()
+    }
+
+    private val selector : ImageSelection = ImageSelection()
+    private val selectFRG : selectFRG = selectFRG()
+    fun selectImage(view : View)
+    {
+        selector.setPosition(positionX, positionY)
+
+        val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
+        openFragment.replace(R.id.fragmentLocFrL, selectFRG)
+        openFragment.commit()
+    }
+
+    override fun fromSelectFRG() {
+        selector.stopSelecting()
+    }
+
+    private fun displaySelection()
+    {
+        async {
+
+            val newImage : Bitmap = selector.displayImage(currentImage)
+
+            uiThread {
+                imagePreviewIV.setImageBitmap(newImage)
+            }
+        }
+    }
+
+    private val filterFRG : filterFRG = filterFRG()
+    fun addFilter(view : View)
+    {
+        /*
         var imageFilter : ImageFilters = ImageFilters(applicationContext)
 
-        currentImage = imageFilter.applyFilter(currentImage)
+        currentImage = imageFilter.applyFilter(currentImage, applicationContext)
 
-        imagePreviewIV.setImageBitmap(currentImage)
+        imagePreviewIV.setImageBitmap(currentImage)*/
+
+        val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
+        openFragment.replace(R.id.fragmentLocFrL, filterFRG)
+        openFragment.commit()
 
     }
 
     private val colourChangeFRG : ColourChangeFRG = ColourChangeFRG()
-    public fun colourChange(view : View)
+    fun colourChange(view : View)
     {
-        currentImageCopy = currentImage.copy(Bitmap.Config.ARGB_8888, true)
 
         val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
         openFragment.replace(R.id.fragmentLocFrL, colourChangeFRG)
@@ -150,14 +185,11 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
     override fun fromColourChangeFRG(paint: Paint) {
         async {
 
-            val newImage : Bitmap = Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
-
-            val canvas : Canvas = Canvas(newImage)
-            canvas.drawBitmap(currentImage, 0.0f, 0.0f, paint)
+            val newImage : Bitmap = addColour(currentImage, paint)
 
             uiThread {
-                currentImageCopy = newImage
-                imagePreviewIV.setImageBitmap(currentImageCopy)
+
+                imagePreviewIV.setImageBitmap(newImage)
             }
         }
     }
@@ -166,13 +198,11 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
         async {
 
-            val newImage : Bitmap = Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
 
-            val canvas : Canvas = Canvas(newImage)
-            canvas.drawBitmap(currentImage, 0.0f, 0.0f, paint)
+            currentImage = addColour(currentImage, paint)
 
             uiThread {
-                currentImage = newImage
+
                 imagePreviewIV.setImageBitmap(currentImage)
             }
         }
@@ -180,7 +210,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
     }
 
     private val addTextFRG : AddTextFRG = AddTextFRG()
-    public fun addText(view : View)
+    fun addText(view : View)
     {
         val fragIn : Bundle = Bundle()
         fragIn.putInt("posY", positionY)
@@ -198,11 +228,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
         async {
 
-            val newImage : Bitmap = Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
-
-            val canvas : Canvas = Canvas(newImage)
-            canvas.drawBitmap(currentImage, 0.0f, 0.0f, null)
-            canvas.drawText(message, X.toFloat(), Y.toFloat(), paintTxT)
+            val newImage : Bitmap = addText(currentImage, message, X, Y, paintTxT)
 
             editHistory.add(newImage)
 
@@ -214,11 +240,33 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         }
     }
 
-    private val rotateImageFRG : rotateFRG = rotateFRG()
-    public fun rotateImage(view : View)
+    private val cropFRG : cropFRG = cropFRG()
+    fun cropImage(view : View)
     {
+        val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
+        openFragment.replace(R.id.fragmentLocFrL, cropFRG)
 
-        currentImageCopy = currentImage.copy(Bitmap.Config.ARGB_8888, true)
+        openFragment.commit()
+    }
+
+    override fun fromCropFRGSquare() {
+
+        async {
+
+
+            val newImage : Bitmap = cropSquare(cropFRG.shapeColour, currentImage, ImageSelection())
+
+            uiThread {
+                imagePreviewIV.setImageBitmap(newImage)
+            }
+        }
+
+
+    }
+
+    private val rotateImageFRG : rotateFRG = rotateFRG()
+    fun rotateImage(view : View)
+    {
         val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
         openFragment.replace(R.id.fragmentLocFrL, rotateImageFRG)
 
@@ -230,20 +278,11 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         async {
 
 
-            //parts of the image will always be lost this is because android cannot make a bitmap that big enough
+            val rotatedImage : Bitmap = RotateImage(currentImage, rotation)
 
-            val newImage : Bitmap = Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
-
-            val canvas : Canvas = Canvas(newImage)
-            canvas.save()
-            canvas.rotate(rotation, (canvas.width /2).toFloat(), (canvas.height / 2).toFloat())
-            canvas.drawBitmap(currentImageCopy, 0.0f, 0.0f, null)
-            canvas.restore()
-
-            currentImageCopy = newImage
 
             uiThread {
-                imagePreviewIV.setImageBitmap(currentImageCopy)
+                imagePreviewIV.setImageBitmap(rotatedImage)
             }
         }
     }
@@ -252,6 +291,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
         async {
 
+            /*
             val newImage : Bitmap = Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
 
             val canvas : Canvas = Canvas(newImage)
@@ -263,7 +303,9 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
             //TODO change edit history functionality as it would be quickly filled if saves every time it rotates
             //editHistory.add(newImage)
 
-            currentImage = newImage
+            currentImage = newImage*/
+
+            currentImage = RotateImage(currentImage, rotation)
 
             uiThread {
                 imagePreviewIV.setImageBitmap(currentImage)
@@ -273,7 +315,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
     }
 
     private val addGradientFRG : addGradientFRG = addGradientFRG()
-    public fun addGradient(view : View)
+    fun addGradient(view : View)
     {
         val fragIn : Bundle = Bundle()
         fragIn.putFloat("height", currentImage.height.toFloat())
@@ -304,12 +346,60 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         }
     }
 
-    public fun hideCurrentFragment(view : View)
+    private val blurFRG : blurFRG = blurFRG()
+    public fun blurImage(view : View)
+    {
+        val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
+        openFragment.replace(R.id.fragmentLocFrL, blurFRG)
+
+        openFragment.commit()
+    }
+
+    override fun fromBlur(blurAmount: Int) {
+
+        async {
+            val blurredImage : Bitmap = blurImage(applicationContext, currentImage, blurAmount)
+            uiThread {
+                imagePreviewIV.setImageBitmap(blurredImage)
+            }
+        }
+
+    }
+
+    override fun applyBlur(blurAmount: Int) {
+        async {
+            val blurredImage : Bitmap = blurImage(applicationContext, currentImage, blurAmount)
+            currentImage = blurredImage
+            uiThread {
+                imagePreviewIV.setImageBitmap(currentImage)
+            }
+        }
+    }
+
+    fun hideCurrentFragment(view : View)
     {
         val closeFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
+
+        if (layerFRG.isVisible)
+        {
+            closeFragment.remove(layerFRG)
+        }
+        if (selectFRG.isVisible)
+        {
+            selector.stopSelecting()
+            closeFragment.remove(selectFRG)
+        }
+        if(filterFRG.isVisible)
+        {
+            closeFragment.remove(filterFRG)
+        }
         if (addTextFRG.isVisible)
         {
             closeFragment.remove(addTextFRG)
+        }
+        if (cropFRG.isVisible)
+        {
+            closeFragment.remove(cropFRG)
         }
         if (colourChangeFRG.isVisible)
         {
@@ -322,6 +412,10 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         if (addGradientFRG.isVisible)
         {
             closeFragment.remove(addGradientFRG)
+        }
+        if(blurFRG.isVisible)
+        {
+            closeFragment.remove(blurFRG)
         }
         closeFragment.commit()
     }

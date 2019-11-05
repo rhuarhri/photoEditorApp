@@ -1,8 +1,10 @@
 package com.example.editorapp.imageHandling
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.graphics.Bitmap
+import android.util.Log
 
 class EditHistoryManger(appContext : Context, private val imageHeight : Int, private val imageWidth : Int) {
 
@@ -16,10 +18,11 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
 
     private var appPreferences : SharedPreferences
     private var preferencesEditor : SharedPreferences.Editor
+    private val imageHistory : Array<String?> = arrayOf(null, null, null, null, null, null, null, null, null, null)
     val name : String = "edit_history"
 
     init {
-        appPreferences = appContext.getSharedPreferences(name, Context.MODE_PRIVATE)
+        appPreferences = appContext.getSharedPreferences(name, MODE_PRIVATE)
         preferencesEditor = appPreferences.edit()
         saveImage = SaveImageHandler(appContext)
         getImage = RetrieveImageHandler(appContext)
@@ -28,27 +31,25 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
 
     fun recordLocation()
     {
-        preferencesEditor.putInt(lastEditedKey, currentKeyValue)
+        preferencesEditor.putString(lastEditedKey, imageHistory[currentLocation])
         preferencesEditor.apply()
     }
 
     fun getLastImage() : Bitmap?
     {
-        if (appPreferences.contains(lastEditedKey))
-        {
-            val imageKey : Int = appPreferences.getInt(lastEditedKey, 0)
-            if (appPreferences.contains("$imageKey"))
-            {
-                currentKeyValue = imageKey
-                val fileLocation : String = appPreferences.getString("$currentKeyValue", "")!!
-                val foundImage : Bitmap = getImage.getBitmapFromFile(fileLocation, imageHeight, imageWidth)
+        if (appPreferences.contains(lastEditedKey)) {
+            val imageFileLoc: String = appPreferences.getString(lastEditedKey, "")!!
+            return getImage.getBitmapFromFile(imageFileLoc)
+        }
+        else {
+            return null
+        }
+    }
 
-                return foundImage
-            }
-            else
-            {
-                return null
-            }
+    fun getLastImageLoc() : String?
+    {
+        if (appPreferences.contains(lastEditedKey)) {
+            return appPreferences.getString(lastEditedKey, "")!!
         }
         else
         {
@@ -59,10 +60,10 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
     fun getCurrentImage() : Bitmap?
     {
 
-        if (appPreferences.contains("$currentKeyValue"))
+        if (imageHistory[currentLocation] != null)
         {
-            val fileLocation : String = appPreferences.getString("$currentKeyValue", "")!!
-            val foundImage : Bitmap = getImage.getBitmapFromFile(fileLocation, imageHeight, imageWidth)
+            val fileLocation : String = imageHistory[currentLocation]!!
+            val foundImage : Bitmap = getImage.getBitmapFromFile(fileLocation)
 
             return foundImage
         }
@@ -75,11 +76,9 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
     fun getCurrentImageFilePath() : String?
     {
 
-        if (appPreferences.contains("$currentKeyValue"))
+        if (imageHistory[currentLocation] != null)
         {
-            val fileLocation : String = appPreferences.getString("$currentKeyValue", "")!!
-
-            return fileLocation
+            return imageHistory[currentLocation]!!
         }
         else
         {
@@ -87,10 +86,23 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
         }
     }
 
+    private var currentLocation : Int = 0
     fun add(image : Bitmap)
     {
         saveImage.savePhoto(image)
 
+        currentLocation++
+
+        if (imageHistory[currentLocation] == null)
+        {
+            imageHistory[currentLocation] = saveImage.savedPhotoPath
+        }
+        else
+        {
+            deleteImage.removeImage(imageHistory[currentLocation]!!)
+            imageHistory[currentLocation] = saveImage.savedPhotoPath
+        }
+        /*
         if (appPreferences.contains("${getKeyValue()}"))
         {
             val fileLocation : String = appPreferences.getString("$currentKeyValue", "")!!
@@ -103,13 +115,38 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
         {
             preferencesEditor.putString("$currentKeyValue", saveImage.savedPhotoPath)
             preferencesEditor.apply()
-        }
+        }*/
 
     }
 
     fun undo() : Bitmap?
     {
 
+        if (imageHistory[currentLocation] != null)
+        {
+            deleteImage.removeImage(imageHistory[currentLocation]!!)
+            imageHistory[currentLocation] = null
+
+            if (currentLocation > 0)
+            {
+                currentLocation--
+            }
+            else
+            {
+                currentLocation = imageHistory.size - 1
+            }
+
+            val fileLoc : String = imageHistory[currentLocation]!!
+
+            val foundImage : Bitmap = getImage.getBitmapFromFile(fileLoc)
+
+            return foundImage
+        }
+        else
+        {
+            return null
+        }
+        /*
         if (appPreferences.contains("$currentKeyValue"))
         {
 
@@ -126,7 +163,7 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
 
             if (appPreferences.contains("$currentKeyValue")) {
                 fileLocation = appPreferences.getString("$currentKeyValue", "")!!
-                val foundImage : Bitmap = getImage.getBitmapFromFile(fileLocation, imageHeight, imageWidth)
+                val foundImage : Bitmap = getImage.getBitmapFromFile(fileLocation)
 
                 return foundImage
             }
@@ -139,7 +176,7 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
         else
         {
          return null
-        }
+        }*/
 
     }
 

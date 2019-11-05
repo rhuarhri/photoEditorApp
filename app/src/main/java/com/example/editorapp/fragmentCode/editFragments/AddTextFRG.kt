@@ -1,4 +1,4 @@
-package com.example.editorapp.fragmentCode
+package com.example.editorapp.fragmentCode.editFragments
 
 import android.app.Activity
 import android.content.Context

@@ -12,10 +12,10 @@
         android:layout_height="wrap_content">
 
         <SeekBar
-            android:id="@+id/rotateSB"
+            android:id="@+id/selectionSB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="360"
+            android:max="0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -28,7 +28,7 @@
             android:background="@drawable/button_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rotateSB"
+            app:layout_constraintTop_toBottomOf="@+id/selectionSB"
             app:srcCompat="@drawable/ic_add" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

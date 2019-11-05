@@ -2,6 +2,7 @@ package com.example.editorapp.imageEditing
 
 import android.content.Context
 import android.graphics.*
+import android.renderscript.*
 import com.example.editorapp.R
 
 
@@ -11,17 +12,19 @@ class ImageFilters (private val appContext : Context) {
 
     private lateinit var newImage : Bitmap
 
-    public fun applyFilter(image : Bitmap) : Bitmap
+    public fun applyFilter(image : Bitmap, appContext: Context) : Bitmap
     {
-        changingImage = image.copy(Bitmap.Config.ARGB_8888, true)
+        //changingImage = image.copy(Bitmap.Config.ARGB_8888, true)
 
-        newImage = Bitmap.createBitmap(image.height, image.width, Bitmap.Config.ARGB_8888)
+        //newImage = Bitmap.createBitmap(image.height, image.width, Bitmap.Config.ARGB_8888)
 
-        var canvas : Canvas = Canvas(newImage)
+        //var canvas : Canvas = Canvas(newImage)
 
-        canvas.drawBitmap(changingImage, 0.0f, 0.0f, oldStyle())
+        //canvas.drawBitmap(changingImage, 0.0f, 0.0f, oldStyle())
 
         //cropCircle(canvas)
+
+        newImage = blur(image, appContext)
 
         return newImage
 
@@ -225,6 +228,62 @@ class ImageFilters (private val appContext : Context) {
 
 
 
+    }
+
+    private fun boxBlur(orginal : Bitmap, context : Context) : Bitmap
+    {
+
+        var newImage : Bitmap = Bitmap.createBitmap(orginal.width, orginal.height, Bitmap.Config.ARGB_8888)
+
+        var renderScript : RenderScript = RenderScript.create(context)
+
+        var imageIn : Allocation = Allocation.createFromBitmap(renderScript, orginal)
+        var imageOut : Allocation = Allocation.createFromBitmap(renderScript,newImage)
+
+        var blur : ScriptIntrinsicConvolve3x3 = ScriptIntrinsicConvolve3x3.create(renderScript, Element.U8_4(renderScript))
+        blur.setInput(imageIn)
+        blur.setCoefficients(
+            floatArrayOf(
+                -1f, -1f, -1f,
+                -1f, 8f, -1f,
+                -1f, -1f, -1f
+            )
+            /*
+            floatArrayOf(
+                0f, -1f, 0f,
+                -1f, 5f, -1f,
+                0f, -1f, 0f
+            )*/
+            /*floatArrayOf(
+            1f, 1f, 1f,
+            1f, 1f, 1f,
+            1f, 1f, 1f
+        )*/)
+        blur.forEach(imageOut)
+
+        imageOut.copyTo(newImage)
+        renderScript.destroy()
+        return newImage
+    }
+
+
+    private fun blur(orginal: Bitmap, context: Context) : Bitmap
+    {
+        var newImage : Bitmap = Bitmap.createBitmap(orginal.width, orginal.height, Bitmap.Config.ARGB_8888)
+
+        var renderScript : RenderScript = RenderScript.create(context)
+
+        var imageIn : Allocation = Allocation.createFromBitmap(renderScript, orginal)
+        var imageOut : Allocation = Allocation.createFromBitmap(renderScript,newImage)
+
+        var blur : ScriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
+        blur.setInput(imageIn)
+        blur.setRadius(25f) //between 0 and 25
+        blur.forEach(imageOut)
+
+        imageOut.copyTo(newImage)
+        renderScript.destroy()
+        return newImage
     }
 
 }
