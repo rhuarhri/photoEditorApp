@@ -6,13 +6,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.editorapp.R
+import com.example.editorapp.imageHandling.RetrieveImageHandler
 import com.example.editorapp.slideShowCode.SlideShowListener
 import com.example.editorapp.slideShowCode.SlideShowViewHolder
 
-class SlideShowAdapter(private val context : Context, private val images : Array<Bitmap>, private var slideShowListener : SlideShowListener)
+open class SlideShowAdapter(private val context : Context, private val images : Array<String>, private var slideShowListener : SlideShowListener)
     : RecyclerView.Adapter<SlideShowViewHolder>()
 {
-    //private val imageHandler : RetrieveImageHandler = RetrieveImageHandler(context)
+    open val getImage : RetrieveImageHandler = RetrieveImageHandler(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SlideShowViewHolder {
         val myLayout = LayoutInflater.from(context)
@@ -25,10 +26,11 @@ class SlideShowAdapter(private val context : Context, private val images : Array
 
     override fun onBindViewHolder(holder: SlideShowViewHolder, position: Int) {
 
-        holder.filterIV.maxWidth = 100//holder.filterIV.height
+        holder.filterIV.maxWidth = 100
         holder.filterIV.maxHeight = 100
-        //imageHandler.recyclerViewImageHandler(holder.filterIV, images[position], true)
-        holder.filterIV.setImageBitmap(images[position])
+
+        getImage.recyclerViewImageHandler(holder.filterIV, images[position], true)
+        //holder.filterIV.setImageBitmap(images[position])
         holder.filterIV.setOnClickListener {
             slideShowListener.onItemClick(position)
         }

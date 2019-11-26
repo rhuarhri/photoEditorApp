@@ -79,7 +79,7 @@ class AcceptImageFRG : Fragment() {
         doneBTN.setOnClickListener {
 
             val saveImage : SaveImageHandler = SaveImageHandler(appContext)
-            saveImage.savePhoto(chosenImage)
+            saveImage.savePhoto(chosenImage, null, null)
 
             val goTo : Intent = Intent(appContext, ImagePreviewActivity::class.java)
             goTo.putExtra("photo", saveImage.savedPhotoPath)

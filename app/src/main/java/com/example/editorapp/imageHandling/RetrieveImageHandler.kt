@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.annotation.GlideModule
 import com.example.editorapp.R
 import java.io.File
 import java.io.FileInputStream
@@ -154,7 +156,7 @@ class RetrieveImageHandler(private val context : Context) {
         }
     }
 
-    fun getBitmapFromResoucres(location : Int) : Bitmap
+    fun getBitmapFromResources(location : Int) : Bitmap
     {
         /*
         val foundImage : Bitmap? = BitmapFactory.decodeResource(context.resources, location, null)
@@ -221,13 +223,20 @@ class RetrieveImageHandler(private val context : Context) {
 
     fun recyclerViewImageHandler(desiredIV : ImageView, imageLocation : String, isFile : Boolean)
     {
+        var image =
+        if (isFile) {
+            imageLocation
+        }
+        else
+        {
+            imageLocation.toInt()
+        }
 
-        /*
         GlideApp.with(context)
-            .load(imageLocation)
-            .override(desiredIV.height,desiredIV.width)
+            .load(image)
+            .override(desiredIV.height, desiredIV.width)
             .placeholder(R.drawable.no_image_icon)
             .error(R.drawable.no_image_icon)
-            .into(desiredIV)*/
+            .into(desiredIV)
     }
 }

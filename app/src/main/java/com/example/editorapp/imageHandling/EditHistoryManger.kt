@@ -31,8 +31,9 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
 
     fun recordLocation()
     {
-        preferencesEditor.putString(lastEditedKey, imageHistory[currentLocation])
-        preferencesEditor.apply()
+        //TODO all the layers need to be joined before last image saved
+        //preferencesEditor.putString(lastEditedKey, imageHistory[currentLocation])
+        //preferencesEditor.apply()
     }
 
     fun getLastImage() : Bitmap?
@@ -89,7 +90,7 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
     private var currentLocation : Int = 0
     fun add(image : Bitmap)
     {
-        saveImage.savePhoto(image)
+        saveImage.savePhoto(image, null, null)
 
         currentLocation++
 
@@ -180,18 +181,4 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
 
     }
 
-    private fun getKeyValue() : Int
-    {
-        ++currentKeyValue
-        if (currentKeyValue < maxEntryAmount)
-        {
-            return currentKeyValue
-        }
-        else
-        {
-            currentKeyValue = 0
-            return currentKeyValue
-        }
-
-    }
 }

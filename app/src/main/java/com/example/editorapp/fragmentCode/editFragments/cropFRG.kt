@@ -39,14 +39,16 @@ class cropFRG : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var function = ""
+
         val squareBTN : ImageButton = view.findViewById(R.id.squareBTN)
         squareBTN.setOnClickListener {
-
+            function = "square"
         }
 
         val applyBTN : ImageButton = view.findViewById(R.id.applyBTN)
         applyBTN.setOnClickListener {
-            callback.fromCropFRGSquare()
+            callback.fromCropFRG(function)
         }
 
     }

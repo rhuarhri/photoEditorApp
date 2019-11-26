@@ -2,10 +2,51 @@ package com.example.editorapp.imageEditing
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.util.Log
+import android.widget.ImageView
+import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.uiThread
 
-//class ImageRotate {
+class ImageRotate (private val imagePreview : ImageView, private var originalImage : Bitmap){
 
-    fun RotateImage(image : Bitmap, rotation: Float) : Bitmap
+    public fun rotateEventProcessor(function : String, rotation: Float)
+    {
+        async {
+            var changedImage : Bitmap? = null
+            when (function)
+            {
+                "apply" ->
+                {
+                    originalImage = rotateImage(originalImage, rotation)
+                    changedImage = originalImage
+                    changeApplied = true
+
+                }
+                "preview" ->
+                {
+                    changedImage = rotateImage(originalImage, rotation)
+                    changeApplied = false
+                }
+                else ->
+                {
+                    Log.e("rotate Event Processor", "$function is not a real function")
+                }
+            }
+
+            uiThread {
+                imagePreview.setImageBitmap(changedImage)
+            }
+
+        }
+
+    }
+
+    private var changeApplied = false
+    public fun hasChanged() : Boolean
+    {
+        return changeApplied;
+    }
+    private fun rotateImage(image : Bitmap, rotation: Float) : Bitmap
     {
         val newImage : Bitmap = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888)
 
@@ -17,4 +58,4 @@ import android.graphics.Canvas
 
         return newImage
     }
-//}
+}

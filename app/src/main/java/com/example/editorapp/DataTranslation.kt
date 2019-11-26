@@ -59,4 +59,5 @@ class DataTranslation {
         return "#ff$hexRed$hexGreen$hexBlue"
     }
 
+
 }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/filterIV"
+            android:layout_width="100dp"
+            android:layout_height="150dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/no_image_icon" />
+
+        <ImageButton
+            android:id="@+id/viewBTN"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/button_background"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/copyBTN"
+            app:layout_constraintEnd_toEndOf="@+id/filterIV"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/filterIV"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_view" />
+
+        <ImageButton
+            android:id="@+id/copyBTN"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/button_background"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/deleteBTN"
+            app:layout_constraintEnd_toEndOf="@+id/filterIV"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/filterIV"
+            app:layout_constraintTop_toBottomOf="@+id/viewBTN"
+            app:srcCompat="@drawable/ic_copy" />
+
+        <ImageButton
+            android:id="@+id/deleteBTN"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/button_background"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/filterIV"
+            app:layout_constraintEnd_toEndOf="@+id/filterIV"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/filterIV"
+            app:layout_constraintTop_toBottomOf="@+id/copyBTN"
+            app:srcCompat="@drawable/ic_delete" />
+
+
+        <!--
+        <ImageView
+            android:id="@+id/filterIV"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/no_image_icon" />-->
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

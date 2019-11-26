@@ -3,6 +3,7 @@ package com.example.editorapp.fragmentCode.editFragments
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,7 +60,7 @@ class rotateFRG : Fragment() {
                     degrees += difference
                 }
 
-                callback.fromRotate(difference.toFloat())
+                callback.fromRotateFRG("preview", degrees.toFloat())
 
             }
 
@@ -72,7 +73,7 @@ class rotateFRG : Fragment() {
 
         applyBTN.setOnClickListener {
 
-            callback.applyRotate(degrees.toFloat())
+            callback.fromRotateFRG("apply", degrees.toFloat())
 
         }
     }

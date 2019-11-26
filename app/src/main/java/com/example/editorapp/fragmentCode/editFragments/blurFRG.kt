@@ -45,7 +45,7 @@ class blurFRG: Fragment() {
         blurSB.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 blurAmount = progress
-                callback.fromBlur(blurAmount)
+                callback.fromBlurFRG("preview", blurAmount)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -55,7 +55,7 @@ class blurFRG: Fragment() {
         val applyBTN : ImageButton = view.findViewById(R.id.applyBTN)
 
         applyBTN.setOnClickListener {
-            callback.applyBlur(blurAmount)
+            callback.fromBlurFRG("apply", blurAmount)
         }
     }
 }

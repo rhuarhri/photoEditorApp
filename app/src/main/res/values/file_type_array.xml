@@ -3,6 +3,6 @@
     <string-array name="file_types">
         <item>.jpeg</item>
         <item>.png</item>
-        <item>.bmp</item>
+        <item>.WEBP</item>
     </string-array>
 </resources>

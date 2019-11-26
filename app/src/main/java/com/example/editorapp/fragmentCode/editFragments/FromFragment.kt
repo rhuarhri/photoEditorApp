@@ -1,27 +1,55 @@
 package com.example.editorapp.fragmentCode.editFragments
 
+import android.graphics.Bitmap
 import android.graphics.Paint
+import java.text.FieldPosition
 
 interface FromFragment {
 
-    public fun fromColourChangeFRG(paint : Paint)
+    //event processor
+    public fun fromColourChangeFRG(function : String, paint : Paint)
 
-    public fun applyColourChangeFRG(paint : Paint)
+    //public fun applyColourChangeFRG(paint : Paint)
 
+    //event processor
     public fun fromAddText(paintTxT : Paint, X : Int, Y : Int, message : String)
 
-    public fun fromRotate(rotation : Float)
+    //event processor
+    public fun fromRotateFRG(function : String, rotation : Float)
 
-    public fun applyRotate(rotation: Float)
+    //public fun applyRotate(rotation: Float)
 
+    //event processor
     public fun fromGradient(paint : Paint)
 
-    public fun fromCropFRGSquare()
+    //event processor
+    public fun fromCropFRG(function : String)
 
+    //event processor
     public fun fromSelectFRG()
 
-    public fun fromBlur(blurAmount : Int)
+    //event processor
+    public fun fromBlurFRG(function: String, blurAmount : Int)
 
-    public fun applyBlur(blurAmount: Int)
+    //public fun applyBlur(blurAmount: Int)
+
+
+    //event processor
+    public fun fromFilterFRGOverlay(overlay : Bitmap)
+
+    //public fun fromFilterFRGFilter()
+
+    //public fun applyFilterFRGFilter(filter: Bitmap)
+
+    public fun applyFilterFRGOverlay(overlay: Bitmap)
+
+    public fun fromLayerFRGDelete(position: Int)
+
+    public fun fromLayerFRGCopy(position: Int)
+
+    public fun fromLayerFRGView(position: Int)
+
+    public fun fromLayerFRGBuild()
+
 
 }

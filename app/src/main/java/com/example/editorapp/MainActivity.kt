@@ -2,10 +2,12 @@ package com.example.editorapp
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.TextureView
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.camera.core.ImageCapture
 import androidx.core.app.ActivityCompat
@@ -15,8 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.editorapp.cameraCode.CameraHandler
 import com.example.editorapp.imageHandling.RetrieveImageHandler
 import com.example.editorapp.imageHandling.SaveImageHandler
-import com.example.editorapp.slideShowCode.SlideShowAdapter
-import com.example.editorapp.slideShowCode.SlideShowListener
+import com.example.editorapp.slideShowCode.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.uiThread
@@ -26,6 +27,13 @@ class MainActivity : AppCompatActivity(), SlideShowListener{
 
     private lateinit var cameraManger : CameraHandler
     private lateinit var cameraBTN : Button
+    private lateinit var overlayIV : ImageView
+
+    private val images = arrayOf((R.drawable.aim_filter).toString(), (R.drawable.film_filter).toString(),
+    (R.drawable.fire_filter).toString(), (R.drawable.jail_filter).toString(),
+    (R.drawable.money_filter).toString(), (R.drawable.photo_filter).toString(),
+    (R.drawable.rose_filter).toString(), (R.drawable.stage_filter).toString()
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,42 +72,32 @@ class MainActivity : AppCompatActivity(), SlideShowListener{
             })
         }
 
+        overlayIV = findViewById(R.id.overlayIV)
+
         val slideShowListener = this
 
-        async {
-            var imageGetter: RetrieveImageHandler = RetrieveImageHandler(applicationContext)
-
-            var images = arrayOf(
-                imageGetter.formatBitmapFromResources(R.drawable.aim_filter, 100, 100),
-                imageGetter.formatBitmapFromResources(R.drawable.film_filter, 100, 100),
-                imageGetter.formatBitmapFromResources(R.drawable.fire_filter, 100, 100),
-                imageGetter.formatBitmapFromResources(R.drawable.jail_filter, 100, 100),
-                imageGetter.formatBitmapFromResources(R.drawable.money_filter, 100, 100),
-                imageGetter.formatBitmapFromResources(R.drawable.photo_filter, 100, 100),
-                imageGetter.formatBitmapFromResources(R.drawable.rose_filter, 100, 100),
-                imageGetter.formatBitmapFromResources(R.drawable.stage_filter, 100, 100)
-            )
-
-            uiThread {
                 var overlayRV : RecyclerView = findViewById(R.id.overlayRV)
-                val rvAdapter: RecyclerView.Adapter<*> = SlideShowAdapter(applicationContext, images, slideShowListener)
+                val rvAdapter: RecyclerView.Adapter<*> = ShowOverlaysAdapter(applicationContext, images, slideShowListener)
                 overlayRV.apply {
 
                     setHasFixedSize(false)
-                    layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
+                    layoutManager = LinearLayoutManager(
+                        applicationContext,
+                        LinearLayoutManager.HORIZONTAL,
+                        false
+                    )
 
                     adapter = rvAdapter
                 }
-            }
-
-        }
-
-
 
     }
 
     override fun onItemClick(position: Int) {
+        val imageGetter: RetrieveImageHandler = RetrieveImageHandler(applicationContext)
 
+        val chosenFilter : Bitmap = imageGetter.formatBitmapFromResources(images[position].toInt(), overlayIV.height, overlayIV.width)
+
+        overlayIV.setImageBitmap(chosenFilter)
     }
 
     private fun checkPermission()

@@ -33,15 +33,27 @@
             app:layout_constraintStart_toEndOf="@+id/overlayBTN"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageButton
+            android:id="@+id/applyBTN"
+            android:layout_width="60dp"
+            android:layout_height="0dp"
+            android:background="@drawable/button_background"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/filterRV"
+            app:srcCompat="@drawable/ic_add" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/filterRV"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/applyBTN"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/overlayBTN" />
+            app:layout_constraintTop_toBottomOf="@+id/overlayBTN">
+
+        </androidx.recyclerview.widget.RecyclerView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

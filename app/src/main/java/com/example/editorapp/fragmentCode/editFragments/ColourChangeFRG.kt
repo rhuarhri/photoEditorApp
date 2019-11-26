@@ -70,7 +70,7 @@ class ColourChangeFRG : Fragment()
                 redAmount = progress
                 redAmountTXT.text = "$redAmount"
                 paint = createPaint(redAmount, greenAmount, blueAmount)
-                callback.fromColourChangeFRG(paint)
+                callback.fromColourChangeFRG("preview", paint)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -83,7 +83,7 @@ class ColourChangeFRG : Fragment()
                 greenAmount = progress
                 greenAmountTXT.text = "$greenAmount"
                 paint = createPaint(redAmount, greenAmount, blueAmount)
-                callback.fromColourChangeFRG(paint)
+                callback.fromColourChangeFRG("preview", paint)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -95,7 +95,7 @@ class ColourChangeFRG : Fragment()
                 blueAmount = progress
                 blueAmountTXT.text = "$blueAmount"
                 paint = createPaint(redAmount, greenAmount, blueAmount)
-                callback.fromColourChangeFRG(paint)
+                callback.fromColourChangeFRG("preview", paint)
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -103,7 +103,8 @@ class ColourChangeFRG : Fragment()
         })
 
         applyBTN.setOnClickListener {
-            callback.applyColourChangeFRG(paint)
+            //callback.applyColourChangeFRG(paint)
+            callback.fromColourChangeFRG("apply", paint)
         }
 
     }

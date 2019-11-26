@@ -1,12 +1,51 @@
 package com.example.editorapp.imageEditing
 
 import android.graphics.*
+import android.util.Log
+import android.widget.ImageView
 import com.example.editorapp.fragmentCode.editFragments.cropFRG
+import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.uiThread
 
-//class ImageCrop {
+class ImageCrop (private val imagePreview : ImageView, private var originalImage : Bitmap) {
 
-    //private val cropFRG : cropFRG = cropFRG()
 
+    public fun cropEventProcessor(function : String, colour : String, selector: ImageSelection)
+    {
+        async {
+            var changedImage : Bitmap? = null
+            when (function)
+            {
+                "square" ->
+                {
+                    originalImage = cropSquare(colour, originalImage, selector)
+                    changedImage = originalImage
+                    changeApplied = true
+
+                }
+                "circle" ->
+                {
+
+                }
+                else ->
+                {
+                    Log.e("crop Event Processor", "$function is not a real function")
+                }
+            }
+
+            uiThread {
+                imagePreview.setImageBitmap(changedImage)
+            }
+
+        }
+
+    }
+
+    private var changeApplied = false
+    public fun hasChanged() : Boolean
+    {
+        return changeApplied;
+    }
     fun cropSquare(colour : String, currentImage : Bitmap, selector : ImageSelection) : Bitmap
     {
         val rectImage = Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
@@ -41,4 +80,4 @@ import com.example.editorapp.fragmentCode.editFragments.cropFRG
 
         return resizedImage
     }
-//}
+}

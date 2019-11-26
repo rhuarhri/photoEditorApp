@@ -37,7 +37,7 @@ class SaveImageHandler (private val context : Context) {
 
 
     @Throws(IOException::class)
-    fun createImageFile(): File {
+    private fun createImageFile(): File {
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val storageDir: File = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
@@ -54,9 +54,9 @@ class SaveImageHandler (private val context : Context) {
     }
 
     @Throws(IOException::class)
-    fun createCustomImageFile(name : String, type : String) : File
+    private fun createCustomImageFile(name : String, type : String) : File
     {
-        val storageDir: File = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        val storageDir: File = context.getExternalFilesDir(Environment.DIRECTORY_DCIM)!!
         return File.createTempFile(
             name,
             type,
@@ -66,15 +66,34 @@ class SaveImageHandler (private val context : Context) {
         }
     }
 
-    fun savePhoto(photo : Bitmap)
+    fun savePhoto(photo : Bitmap, name: String?, type: String?)
     {
-        val imageFile : File = createImageFile()
+        val imageFile: File =
+        if (name == null || type == null) {
+             createImageFile()
+        }
+        else {
+            createCustomImageFile(name, type)
+        }
+
         val fileStream = FileOutputStream(imageFile)
 
-        photo.compress(Bitmap.CompressFormat.PNG, 85, fileStream)
+        photo.compress(getCompressionType(type), 85, fileStream)
+
+
         fileStream.flush()
         fileStream.close()
 
+    }
+
+    private fun getCompressionType(type : String?) : Bitmap.CompressFormat
+    {
+        return when(type) {
+            ".jpeg" -> Bitmap.CompressFormat.JPEG
+            ".png" -> Bitmap.CompressFormat.PNG
+            ".WEBP" -> Bitmap.CompressFormat.WEBP
+            else -> Bitmap.CompressFormat.PNG
+        }
     }
 
     fun getPhotoFile():File
