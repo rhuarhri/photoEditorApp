@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.ImageView
 import com.example.editorapp.fragmentCode.editFragments.cropFRG
 import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 class ImageCrop (private val imagePreview : ImageView, private var originalImage : Bitmap) {
@@ -12,7 +13,7 @@ class ImageCrop (private val imagePreview : ImageView, private var originalImage
 
     public fun cropEventProcessor(function : String, colour : String, selector: ImageSelection)
     {
-        async {
+        doAsync {
             var changedImage : Bitmap? = null
             when (function)
             {
@@ -46,6 +47,8 @@ class ImageCrop (private val imagePreview : ImageView, private var originalImage
     {
         return changeApplied;
     }
+
+
     fun cropSquare(colour : String, currentImage : Bitmap, selector : ImageSelection) : Bitmap
     {
         val rectImage = Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)

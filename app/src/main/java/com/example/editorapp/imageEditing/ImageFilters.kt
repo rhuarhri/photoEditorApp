@@ -14,17 +14,17 @@ class ImageFilters (private val appContext : Context) {
 
     public fun applyFilter(image : Bitmap, appContext: Context) : Bitmap
     {
-        //changingImage = image.copy(Bitmap.Config.ARGB_8888, true)
+        changingImage = image.copy(Bitmap.Config.ARGB_8888, true)
 
-        //newImage = Bitmap.createBitmap(image.height, image.width, Bitmap.Config.ARGB_8888)
+        newImage = Bitmap.createBitmap(image.height, image.width, Bitmap.Config.ARGB_8888)
 
-        //var canvas : Canvas = Canvas(newImage)
+        var canvas : Canvas = Canvas(newImage)
 
-        //canvas.drawBitmap(changingImage, 0.0f, 0.0f, oldStyle())
+        canvas.drawBitmap(changingImage, 0.0f, 0.0f, alphaBlue())
 
         //cropCircle(canvas)
 
-        newImage = blur(image, appContext)
+        //newImage = blur(image, appContext)
 
         return newImage
 

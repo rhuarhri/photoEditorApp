@@ -17,15 +17,15 @@ class ImageRotate (private val imagePreview : ImageView, private var originalIma
             {
                 "apply" ->
                 {
+                    changeApplied = true
                     originalImage = rotateImage(originalImage, rotation)
                     changedImage = originalImage
-                    changeApplied = true
 
                 }
                 "preview" ->
                 {
-                    changedImage = rotateImage(originalImage, rotation)
                     changeApplied = false
+                    changedImage = rotateImage(originalImage, rotation)
                 }
                 else ->
                 {

@@ -19,6 +19,8 @@ interface FromFragment {
 
     //public fun applyRotate(rotation: Float)
 
+    public fun fromDraw(size : Float, colour : Int)
+
     //event processor
     public fun fromGradient(paint : Paint)
 
@@ -35,13 +37,13 @@ interface FromFragment {
 
 
     //event processor
-    public fun fromFilterFRGOverlay(overlay : Bitmap)
+    public fun fromFilterFRGOverlay(function: String, overlay : Bitmap?, filter : String)
 
     //public fun fromFilterFRGFilter()
 
     //public fun applyFilterFRGFilter(filter: Bitmap)
 
-    public fun applyFilterFRGOverlay(overlay: Bitmap)
+    //public fun applyFilterFRGOverlay(overlay: Bitmap)
 
     public fun fromLayerFRGDelete(position: Int)
 

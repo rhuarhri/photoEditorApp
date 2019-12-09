@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_background">
+
+        <TextView
+            android:id="@+id/textSizeTitleTXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="Text Size"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/textSizeET"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textSizeTitleTXT"
+            app:layout_constraintTop_toTopOf="@+id/textSizeTitleTXT" />
+
+
+        <ImageView
+            android:id="@+id/colorPreviewIV"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textSizeET"
+            app:srcCompat="@color/colorBlack" />
+
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/colorPreviewIV"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/colorPreviewIV"
+            app:layout_constraintTop_toTopOf="@+id/colorPreviewIV">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/blackBTN"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorBlack" />
+
+                <Button
+                    android:id="@+id/whiteBTN"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorWhite" />
+
+                <Button
+                    android:id="@+id/redBTN"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorRed" />
+
+                <Button
+                    android:id="@+id/pinkBTN"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorPink" />
+
+                <Button
+                    android:id="@+id/yellowBTN"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorYellow" />
+
+                <Button
+                    android:id="@+id/greenBTN"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorGreen" />
+
+                <Button
+                    android:id="@+id/lightBlueBTN"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorLightBlue" />
+
+                <Button
+                    android:id="@+id/blueBTN"
+                    android:layout_width="60dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorBlue" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <ImageButton
+            android:id="@+id/setBTN"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button_background"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/colorPreviewIV"
+            app:srcCompat="@drawable/ic_add" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

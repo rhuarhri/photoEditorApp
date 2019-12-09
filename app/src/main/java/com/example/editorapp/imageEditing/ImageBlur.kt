@@ -21,15 +21,15 @@ class ImageBlur(private val appContext : Context, private val imagePreview : Ima
             {
                 "apply" ->
                 {
+                    changeApplied = true
                     originalImage = blurImage(originalImage, blurAmount)
                     changedImage = originalImage
-                    changeApplied = true
 
                 }
                 "preview" ->
                 {
-                    changedImage = blurImage(originalImage, blurAmount)
                     changeApplied = false
+                    changedImage = blurImage(originalImage, blurAmount)
                 }
                 else ->
                 {

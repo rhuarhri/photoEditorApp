@@ -1,6 +1,7 @@
 package com.example.editorapp
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,8 @@ import android.widget.Toast
 import androidx.camera.core.ImageCapture
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.editorapp.cameraCode.CameraHandler
@@ -20,6 +23,7 @@ import com.example.editorapp.imageHandling.SaveImageHandler
 import com.example.editorapp.slideShowCode.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
 
@@ -29,15 +33,13 @@ class MainActivity : AppCompatActivity(), SlideShowListener{
     private lateinit var cameraBTN : Button
     private lateinit var overlayIV : ImageView
 
-    private val images = arrayOf((R.drawable.aim_filter).toString(), (R.drawable.film_filter).toString(),
-    (R.drawable.fire_filter).toString(), (R.drawable.jail_filter).toString(),
-    (R.drawable.money_filter).toString(), (R.drawable.photo_filter).toString(),
-    (R.drawable.rose_filter).toString(), (R.drawable.stage_filter).toString()
-    )
+    private lateinit var activityViewModel : MainActVM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        activityViewModel = ViewModelProviders.of(this).get(MainActVM::class.java)
 
         checkPermission()
 
@@ -58,7 +60,23 @@ class MainActivity : AppCompatActivity(), SlideShowListener{
             cameraManger.imageCapture.takePicture(photoFile, object : ImageCapture.OnImageSavedListener
             {
                 override fun onImageSaved(file: File) {
+                    doAsync {
 
+                        val goto : Intent = activityViewModel.sendCapturedImage(applicationContext, file)
+                        /*
+                        goto.putExtra("photo", file.absolutePath)
+
+                        val image = RetrieveImageHandler(applicationContext).getBitmapFromFile(file.canonicalPath)
+                        goto.putExtra("height", image.height)
+                        goto.putExtra("width", image.width)
+
+                        goto.putExtra("layer", activityViewModel.getChosenFilterLocation())*/
+
+                        uiThread {
+
+                            startActivity(goto)
+                        }
+                    }
                 }
 
                 override fun onError(
@@ -73,11 +91,17 @@ class MainActivity : AppCompatActivity(), SlideShowListener{
         }
 
         overlayIV = findViewById(R.id.overlayIV)
+        doAsync {
+            val chosenFilter : Bitmap = activityViewModel.getChosenFilter(applicationContext)
+            uiThread {
+                overlayIV.setImageBitmap(chosenFilter)
+            }
+        }
 
         val slideShowListener = this
 
-                var overlayRV : RecyclerView = findViewById(R.id.overlayRV)
-                val rvAdapter: RecyclerView.Adapter<*> = ShowOverlaysAdapter(applicationContext, images, slideShowListener)
+                val overlayRV : RecyclerView = findViewById(R.id.overlayRV)
+                val rvAdapter: RecyclerView.Adapter<*> = ShowOverlaysAdapter(applicationContext, activityViewModel.images, slideShowListener)
                 overlayRV.apply {
 
                     setHasFixedSize(false)
@@ -93,11 +117,11 @@ class MainActivity : AppCompatActivity(), SlideShowListener{
     }
 
     override fun onItemClick(position: Int) {
-        val imageGetter: RetrieveImageHandler = RetrieveImageHandler(applicationContext)
+        //val imageGetter: RetrieveImageHandler = RetrieveImageHandler(applicationContext)
 
-        val chosenFilter : Bitmap = imageGetter.formatBitmapFromResources(images[position].toInt(), overlayIV.height, overlayIV.width)
+        //val chosenFilter : Bitmap = imageGetter.formatBitmapFromResources(activityViewModel.images[position].toInt(), overlayIV.height, overlayIV.width)
 
-        overlayIV.setImageBitmap(chosenFilter)
+        overlayIV.setImageBitmap(activityViewModel.setChosenFilter(applicationContext, position, overlayIV.height, overlayIV.width))
     }
 
     private fun checkPermission()

@@ -18,15 +18,15 @@ class ImageColour (private val imagePreview : ImageView, private var originalIma
             {
                 "apply" ->
                 {
+                    changeApplied = true
                     originalImage = addColour(originalImage, paint)
                     changedImage = originalImage
-                    changeApplied = true
 
                 }
                 "preview" ->
                 {
-                    changedImage = addColour(originalImage, paint)
                     changeApplied = false
+                    changedImage = addColour(originalImage, paint)
                 }
                 else ->
                 {

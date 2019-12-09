@@ -27,11 +27,20 @@ class filterFRG : Fragment(), SlideShowListener {
 
     private lateinit var callback : FromFragment
 
+    private var isOverlay = true
+
     private val images = arrayOf((R.drawable.aim_filter).toString(), (R.drawable.film_filter).toString(),
         (R.drawable.fire_filter).toString(), (R.drawable.jail_filter).toString(),
         (R.drawable.money_filter).toString(), (R.drawable.photo_filter).toString(),
         (R.drawable.rose_filter).toString(), (R.drawable.stage_filter).toString()
     )
+
+    private val filters = arrayOf((R.drawable.alpha_blue_filter).toString(), (R.drawable.binary_filter).toString(),
+        (R.drawable.gray_scale_filter).toString(), (R.drawable.invert_filter).toString(),
+        (R.drawable.old_style_filter).toString(), (R.drawable.sepia_filter).toString()
+    )
+
+    private val filterNames = arrayOf("alpha blue", "binary", "gray scale", "invert", "old style", "sepia")
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -70,49 +79,92 @@ class filterFRG : Fragment(), SlideShowListener {
         val filterBTN : Button = view.findViewById(R.id.filterBTN)
         val applyBTN : ImageButton = view.findViewById(R.id.applyBTN)
 
-        overlayBTN.setOnClickListener {
+        val slideShowListener = this
 
+        val filterRV: RecyclerView = view.findViewById(R.id.filterRV)
+        var rvAdapter: RecyclerView.Adapter<*> =
+            ShowOverlaysAdapter(appContext, images, slideShowListener)
+        filterRV.apply {
+
+            setHasFixedSize(false)
+            layoutManager =
+                LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
+
+            adapter = rvAdapter
+        }
+
+
+        overlayBTN.setOnClickListener {
+            isOverlay = true
+            rvAdapter =
+                ShowOverlaysAdapter(appContext, images, slideShowListener)
+            filterRV.apply {
+
+                setHasFixedSize(false)
+                layoutManager =
+                    LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
+
+                adapter = rvAdapter
+            }
         }
 
         filterBTN.setOnClickListener {
+            isOverlay = false
+            rvAdapter =
+                ShowOverlaysAdapter(appContext, filters, slideShowListener)
+            filterRV.apply {
 
+                setHasFixedSize(false)
+                layoutManager =
+                    LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
+
+                adapter = rvAdapter
+            }
 
         }
 
         applyBTN.setOnClickListener {
 
-            val imageGetter: RetrieveImageHandler = RetrieveImageHandler(appContext)
+            if (isOverlay) {
+                val imageGetter: RetrieveImageHandler = RetrieveImageHandler(appContext)
 
-            val chosenFilter : Bitmap = imageGetter.formatBitmapFromResources(images[imagePosition].toInt(), height, width)
+                val chosenFilter: Bitmap = imageGetter.formatBitmapFromResources(
+                    images[imagePosition].toInt(),
+                    height,
+                    width
+                )
 
-            callback.applyFilterFRGOverlay(chosenFilter)
+                callback.fromFilterFRGOverlay("applyOverlay", chosenFilter, "")
+            }
+            else
+            {
+                callback.fromFilterFRGOverlay("applyFilter", null, filterNames[imagePosition])
+            }
         }
 
-        val slideShowListener = this
 
-                val filterRV: RecyclerView = view.findViewById(R.id.filterRV)
-                val rvAdapter: RecyclerView.Adapter<*> =
-                    ShowOverlaysAdapter(appContext, images, slideShowListener)
-                filterRV.apply {
 
-                    setHasFixedSize(false)
-                    layoutManager =
-                        LinearLayoutManager(appContext, LinearLayoutManager.HORIZONTAL, false)
 
-                    adapter = rvAdapter
-                }
 
     }
 
     private var imagePosition : Int = 0
     override fun onItemClick(position: Int) {
 
-        val imageGetter: RetrieveImageHandler = RetrieveImageHandler(appContext)
+        if (isOverlay) {
+            val imageGetter: RetrieveImageHandler = RetrieveImageHandler(appContext)
 
-        val chosenFilter : Bitmap = imageGetter.formatBitmapFromResources(images[position].toInt(), height, width)
-        imagePosition = position
+            val chosenFilter: Bitmap =
+                imageGetter.formatBitmapFromResources(images[position].toInt(), height, width)
+            imagePosition = position
 
-        callback.fromFilterFRGOverlay(chosenFilter)
+            callback.fromFilterFRGOverlay("overlay", chosenFilter, "")
+        }
+        else
+        {
+            imagePosition = position
+            callback.fromFilterFRGOverlay("filter", null, filterNames[imagePosition])
+        }
 
     }
 
