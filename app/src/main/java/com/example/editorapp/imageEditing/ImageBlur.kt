@@ -8,15 +8,15 @@ import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
 import android.util.Log
 import android.widget.ImageView
-import org.jetbrains.anko.custom.async
-import org.jetbrains.anko.uiThread
 
 class ImageBlur(private val appContext : Context, private val imagePreview : ImageView, private var originalImage : Bitmap) {
 
-    public fun blurEventProcessor(function : String, blurAmount: Int)
+    private var changedImage : Bitmap? = null
+
+    fun blurEventProcessor(function : String, blurAmount: Int)
     {
-        async {
-            var changedImage : Bitmap? = null
+
+
             when (function)
             {
                 "apply" ->
@@ -37,18 +37,20 @@ class ImageBlur(private val appContext : Context, private val imagePreview : Ima
                 }
             }
 
-            uiThread {
-                imagePreview.setImageBitmap(changedImage)
-            }
 
-        }
+                imagePreview.setImageBitmap(changedImage)
 
     }
 
     private var changeApplied = false
-    public fun hasChanged() : Boolean
+    fun hasChanged() : Boolean
     {
-        return changeApplied;
+        return changeApplied
+    }
+
+    fun getChangedImage() : Bitmap
+    {
+        return changedImage!!
     }
 
     private fun blurImage(image : Bitmap, blurAmount : Int) : Bitmap
@@ -62,6 +64,7 @@ class ImageBlur(private val appContext : Context, private val imagePreview : Ima
 
         val blur : ScriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
         blur.setInput(imageIn)
+        Log.d("blur image", "blur amount is $blurAmount")
         blur.setRadius(blurAmount.toFloat()) //between 0 and 25
         blur.forEach(imageOut)
 

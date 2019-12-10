@@ -8,11 +8,10 @@ import com.example.editorapp.imageHandling.EditHistoryManger
 import com.example.editorapp.imageHandling.LayerManager
 import com.example.editorapp.imageHandling.RetrieveImageHandler
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 class ImagePreviewActVM : ViewModel() {
 
-    public lateinit var currentImage : Bitmap
+    lateinit var currentImage : Bitmap
     private var originalHeight : Int = 0
     private var originalWidth : Int = 0
 
@@ -21,7 +20,7 @@ class ImagePreviewActVM : ViewModel() {
     private lateinit var getImage : RetrieveImageHandler
 
 
-    public fun setupUI(sentData : Intent, appContext : Context)
+    fun setupUI(sentData : Intent, appContext : Context)
     {
         getImage = RetrieveImageHandler(appContext)
 
@@ -52,18 +51,18 @@ class ImagePreviewActVM : ViewModel() {
 
     //editHistory code
     private lateinit var editHistory : EditHistoryManger
-    public fun undo() : Bitmap
+    fun undo() : Bitmap
     {
         currentImage = editHistory.undo()!!
         return currentImage
     }
 
-    public fun recordLocation()
+    fun recordLocation()
     {
         editHistory.recordLocation()
     }
 
-    public fun addToHistory(image : Bitmap)
+    fun addToHistory(image : Bitmap)
     {
         editHistory.add(image)
     }
@@ -71,49 +70,49 @@ class ImagePreviewActVM : ViewModel() {
     //layer Manager code
     private lateinit var layerManager : LayerManager
 
-    public fun getLayers() : Array<String>
+    fun getLayers() : Array<String>
     {
         return layerManager.getLayerList()
     }
 
-    public fun removeLayer(position : Int)
+    fun removeLayer(position : Int)
     {
         layerManager.removeLayer(position)
     }
 
-    public fun copyLayer(position: Int)
+    fun copyLayer(position: Int)
     {
         doAsync {
-            var copyLayer : Bitmap = layerManager.getLayer(position)!!
+            val copyLayer : Bitmap = layerManager.getLayer(position)!!
             layerManager.addLayer(copyLayer)
         }
     }
 
-    public fun combineLayer() : Bitmap
+    fun combineLayer() : Bitmap
     {
         currentImage = layerManager.combineLayers(layerManager.getLayerList(), originalHeight, originalWidth)
 
         return currentImage
     }
 
-    public fun viewLayer(position: Int) : Bitmap
+    fun viewLayer(position: Int) : Bitmap
     {
         currentImage = layerManager.getLayer(position)!!
         return currentImage
     }
 
-    public fun addLayer(image : Bitmap)
+    fun addLayer(image : Bitmap)
     {
         layerManager.addLayer(image)
     }
 
     //getters and setters
-    public fun getOriginalHeight() : Int
+    fun getOriginalHeight() : Int
     {
         return originalHeight
     }
 
-    public fun getOriginalWidth() : Int
+    fun getOriginalWidth() : Int
     {
         return originalWidth
     }

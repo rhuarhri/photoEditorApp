@@ -39,7 +39,7 @@ class blurFRG: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val blurSB : SeekBar = view.findViewById(R.id.selectionSB)
-        blurSB.max = 360
+        blurSB.max = 25
         blurSB.progress = 0
 
         blurSB.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{

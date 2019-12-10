@@ -3,18 +3,14 @@ package com.example.editorapp.imageEditing
 import android.graphics.*
 import android.util.Log
 import android.widget.ImageView
-import com.example.editorapp.fragmentCode.editFragments.cropFRG
-import org.jetbrains.anko.custom.async
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 class ImageCrop (private val imagePreview : ImageView, private var originalImage : Bitmap) {
 
+    private var changedImage : Bitmap? = null
 
-    public fun cropEventProcessor(function : String, colour : String, selector: ImageSelection)
+    fun cropEventProcessor(function : String, colour : String, selector: ImageSelection)
     {
-        doAsync {
-            var changedImage : Bitmap? = null
+
             when (function)
             {
                 "square" ->
@@ -26,7 +22,9 @@ class ImageCrop (private val imagePreview : ImageView, private var originalImage
                 }
                 "circle" ->
                 {
-
+                    originalImage = cropCircle(colour, originalImage, selector)
+                    changedImage = originalImage
+                    changeApplied = true
                 }
                 else ->
                 {
@@ -34,28 +32,30 @@ class ImageCrop (private val imagePreview : ImageView, private var originalImage
                 }
             }
 
-            uiThread {
-                imagePreview.setImageBitmap(changedImage)
-            }
 
-        }
+                imagePreview.setImageBitmap(changedImage)
+
 
     }
 
     private var changeApplied = false
-    public fun hasChanged() : Boolean
+    fun hasChanged() : Boolean
     {
-        return changeApplied;
+        return changeApplied
     }
 
+    fun getChangedImage() : Bitmap
+    {
+        return changedImage!!
+    }
 
-    fun cropSquare(colour : String, currentImage : Bitmap, selector : ImageSelection) : Bitmap
+    private fun cropSquare(colour : String, currentImage : Bitmap, selector : ImageSelection) : Bitmap
     {
         val rectImage = Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
 
-        val rectCanvas : Canvas = Canvas(rectImage)
+        val rectCanvas = Canvas(rectImage)
 
-        val paintShape : Paint = Paint()
+        val paintShape = Paint()
         paintShape.color = Color.parseColor(colour)
 
         val square : Rect = selector.getRect()
@@ -64,11 +64,11 @@ class ImageCrop (private val imagePreview : ImageView, private var originalImage
 
         val newImage : Bitmap = Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
 
-        val cropCanvas : Canvas = Canvas(newImage)
+        val cropCanvas = Canvas(newImage)
 
         cropCanvas.drawBitmap(currentImage, 0f,0f, null)
 
-        val paintMask : Paint = Paint()
+        val paintMask = Paint()
         paintMask.setXfermode(
             PorterDuffXfermode(PorterDuff.Mode.DST_IN)
         )
@@ -77,10 +77,38 @@ class ImageCrop (private val imagePreview : ImageView, private var originalImage
 
         val resizedImage : Bitmap = Bitmap.createBitmap(selector.width, selector.height, Bitmap.Config.ARGB_8888)
 
-        val resizeCanvas : Canvas = Canvas(resizedImage)
+        val resizeCanvas = Canvas(resizedImage)
 
         resizeCanvas.drawBitmap(newImage, (0 - selector.X.toFloat()), (0-selector.Y.toFloat()), null)
 
         return resizedImage
+    }
+
+    private fun cropCircle(colour : String, currentImage : Bitmap, selector : ImageSelection) : Bitmap
+    {
+        val circleImage = Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
+
+        val circleCanvas = Canvas(circleImage)
+
+        val paintShape = Paint()
+        paintShape.color = Color.parseColor(colour)
+
+        val height = selector.height.toFloat()
+        val width = selector.width.toFloat()
+
+        val circleRadius : Float = if (height > width) {
+            width
+        } else {
+            height
+        }
+
+        val locationX = (0 - selector.X.toFloat()) - (width / 2)
+        val locationY = (0-selector.Y.toFloat()) - (height / 2)
+        //location x and y will be the center of the circle
+
+        circleCanvas.drawCircle(locationX, locationY, circleRadius, paintShape)
+
+        return circleImage
+
     }
 }

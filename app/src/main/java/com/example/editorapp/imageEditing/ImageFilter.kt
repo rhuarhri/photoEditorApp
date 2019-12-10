@@ -11,36 +11,21 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
 
     private var changeApplied : Boolean = false
 
-    private fun checkChange()
-    {
-        if (changeApplied)
-        {
-            Log.d("change", "has changed")
-        }
-        else
-        {
-            Log.d("change", "no change")
-        }
-    }
-
     public fun filterEvent(function : String, overlay: Bitmap?, filter : String)
     {
-        checkChange()
-        doAsync {
+
             var changedImage : Bitmap? = null
             when(function){
                 "filter" ->
                 {
                     originalImage = addImageFilter(originalImage, filter)
                     changedImage = originalImage
-                    checkChange()
                 }
                 "applyFilter"->
                 {
                     changeApplied = true
                     originalImage = addImageFilter(originalImage, filter)
                     changedImage = originalImage
-                    checkChange()
                 }
 
                 "overlay" ->
@@ -48,7 +33,6 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
                     if (overlay != null) {
                         originalImage = addImageOverlay(originalImage, overlay)
                         changedImage = originalImage
-                        checkChange()
                     }
                 }
                 "applyOverlay" ->
@@ -57,24 +41,16 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
                         changeApplied = true
                         originalImage = addImageOverlay(originalImage, overlay)
                         changedImage = originalImage
-                        checkChange()
                     }
                 }
             }
 
-            uiThread {
-                imagePreview.setImageBitmap(changedImage)
-            }
-
-        }
-
-
+            imagePreview.setImageBitmap(changedImage)
 
     }
 
     public fun hasChanged() : Boolean
     {
-        checkChange()
         return changeApplied
     }
 
@@ -96,7 +72,7 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
 
         val canvas: Canvas = Canvas(newImage)
 
-        var paint : Paint = Paint()
+        val paint : Paint = Paint()
 
         when(filter)
         {

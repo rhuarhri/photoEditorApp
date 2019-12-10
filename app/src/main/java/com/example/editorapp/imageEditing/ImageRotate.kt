@@ -4,15 +4,14 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.util.Log
 import android.widget.ImageView
-import org.jetbrains.anko.custom.async
-import org.jetbrains.anko.uiThread
 
 class ImageRotate (private val imagePreview : ImageView, private var originalImage : Bitmap){
 
-    public fun rotateEventProcessor(function : String, rotation: Float)
+    private var changedImage : Bitmap? = null
+
+    fun rotateEventProcessor(function : String, rotation: Float)
     {
-        async {
-            var changedImage : Bitmap? = null
+
             when (function)
             {
                 "apply" ->
@@ -33,24 +32,28 @@ class ImageRotate (private val imagePreview : ImageView, private var originalIma
                 }
             }
 
-            uiThread {
+
                 imagePreview.setImageBitmap(changedImage)
-            }
+
 
         }
 
+    private var changeApplied = false
+    fun hasChanged() : Boolean
+    {
+        return changeApplied
     }
 
-    private var changeApplied = false
-    public fun hasChanged() : Boolean
+    fun getChangedImage() : Bitmap
     {
-        return changeApplied;
+        return changedImage!!
     }
+
     private fun rotateImage(image : Bitmap, rotation: Float) : Bitmap
     {
         val newImage : Bitmap = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888)
 
-        val canvas : Canvas = Canvas(newImage)
+        val canvas = Canvas(newImage)
         canvas.save()
         canvas.rotate(rotation, (image.width /2).toFloat(), (image.height / 2).toFloat())
         canvas.drawBitmap(image, 0.0f, 0.0f, null)

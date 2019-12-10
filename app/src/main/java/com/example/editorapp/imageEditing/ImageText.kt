@@ -10,7 +10,7 @@ import android.graphics.Paint
     {
         val newImage : Bitmap = Bitmap.createBitmap(image.width, image.height, Bitmap.Config.ARGB_8888)
 
-        val canvas : Canvas = Canvas(newImage)
+        val canvas = Canvas(newImage)
         canvas.drawBitmap(image, 0.0f, 0.0f, null)
         canvas.drawText(message, posX.toFloat(), posY.toFloat(), style)
 

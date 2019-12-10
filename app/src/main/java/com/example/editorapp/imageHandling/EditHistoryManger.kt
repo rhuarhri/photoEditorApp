@@ -90,6 +90,7 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
     private var currentLocation : Int = 0
     fun add(image : Bitmap)
     {
+        Log.d("edit history", "image added to history")
         saveImage.savePhoto(image, null, null)
 
         currentLocation++

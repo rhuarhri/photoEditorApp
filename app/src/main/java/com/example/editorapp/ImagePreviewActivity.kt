@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
-import android.view.ScaleGestureDetector
 import android.view.View
 import android.widget.ImageView
 import androidx.fragment.app.FragmentTransaction
@@ -26,12 +25,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
     private var positionY : Int = 0
     private var positionX : Int = 0
 
-    //private lateinit var currentImage : Bitmap
-    //private lateinit var currentImageCopy : Bitmap
-
     private lateinit var activityVM : ImagePreviewActVM
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,55 +35,14 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
         activityVM.setupUI(intent, applicationContext)
 
-
-
         imagePreviewIV = findViewById(R.id.imagePreviewIV)
 
         imagePreviewIV.setImageBitmap(activityVM.currentImage)
 
         pointerIV = findViewById(R.id.pointerIV)
 
-        //layerManager = LayerManager(applicationContext)
-        //layerManager.addLayer(activityVM.currentImage)
-
-        /*
-        if (photoLayer != null)
-        {
-
-            layerManager.addLayer(chosenFilter)
-        }*/
-
-        //mScaleDetector = ScaleGestureDetector(applicationContext, scaleListener)
-
     }
 
-    //var mScaleFactor = 1f
-
-    /*
-    private val scaleListener = object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
-
-        override fun onScale(detector: ScaleGestureDetector): Boolean {
-            mScaleFactor *= detector.scaleFactor
-
-            // Don't let the object get too small or too large.
-            mScaleFactor = Math.max(0.1f, Math.min(mScaleFactor, 5.0f))
-
-            var testImage : Bitmap = currentImage.copy(Bitmap.Config.ARGB_8888, true)
-
-            var testCanvas : Canvas = Canvas(testImage)
-            testCanvas.scale(mScaleFactor, mScaleFactor)
-            testCanvas.restore()
-
-            imagePreviewIV.setImageBitmap(testImage)
-
-            //invalidate()
-            return true
-        }
-    }
-
-     */
-
-    private lateinit var mScaleDetector : ScaleGestureDetector
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         positionX = event.x.roundToInt()
@@ -98,8 +51,6 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         pointerIV.x = positionX.toFloat()
         positionY -= 200
         pointerIV.y = positionY.toFloat()
-
-        //mScaleDetector.onTouchEvent(event)
 
         if (selector.selectionInProgress()) {
             selector.setHeightAndWidth((positionX), (positionY + 200))
@@ -117,24 +68,22 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         return true
     }
 
-    //private var originalHeight : Int = 0
-    //private var originalWidth : Int = 0
+
     fun save(view : View)
     {
-        val fragIn : Bundle = Bundle()
+        val fragIn = Bundle()
         fragIn.putInt("height", activityVM.getOriginalHeight())
         fragIn.putInt("width", activityVM.getOriginalWidth())
         fragIn.putStringArray("layers", activityVM.getLayers())
 
-        val goTo : Intent = Intent(applicationContext, SaveImageActivity::class.java)
+        val goTo = Intent(applicationContext, SaveImageActivity::class.java)
         goTo.putExtras(fragIn)
         startActivity(goTo)
     }
 
-    //private lateinit var editHistory : EditHistoryManger
     fun undo(view : View)
     {
-        //currentImage = editHistory.undo()!!
+        activityVM.undo()
         imagePreviewIV.setImageBitmap(activityVM.currentImage)
 
     }
@@ -143,7 +92,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
     fun layersNav(view : View)
     {
 
-        val fragIn : Bundle = Bundle()
+        val fragIn = Bundle()
         Log.d("layers", "layer amount is ${activityVM.getLayers().size}")
         fragIn.putStringArray("layers", activityVM.getLayers())
 
@@ -188,7 +137,6 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
     override fun fromLayerFRGBuild() {
         doAsync{
-            //currentImage = layerManager.combineLayers(layerManager.getLayerList(), originalHeight, originalWidth)
             val image : Bitmap = activityVM.combineLayer()
             uiThread {
                 imagePreviewIV.setImageBitmap(image)
@@ -226,7 +174,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
     private val filterFRG : filterFRG = filterFRG()
     fun addFilter(view : View)
     {
-        val fragIn : Bundle = Bundle()
+        val fragIn = Bundle()
         fragIn.putInt("height", activityVM.currentImage.height)
         fragIn.putInt("width", activityVM.currentImage.width)
 
@@ -240,55 +188,24 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
     override fun fromFilterFRGOverlay(function : String, overlay: Bitmap?, filter : String) {
 
-        /*
         doAsync {
-
-            val newImage : Bitmap = addImageOverlay(activityVM.currentImage, overlay)
-
+            val imageFilter = ImageFilter(imagePreviewIV, activityVM.currentImage)
+            imageFilter.filterEvent(function, overlay, filter)
             uiThread {
-                imagePreviewIV.setImageBitmap(newImage)
+                if (imageFilter.hasChanged()) {
+                    Log.d("overlay image", "has changed is true")
+                    if (overlay != null) {
+                        activityVM.addLayer(overlay)
+                    }
+                    //TODO save change
+                } else {
+                    Log.d("overlay image", "no change required")
+                }
             }
-        }
-
-        val imageFilter : ImageFilters = ImageFilters(applicationContext)
-
-        val newImage : Bitmap = imageFilter.applyFilter(activityVM.currentImage, applicationContext)
-
-        imagePreviewIV.setImageBitmap(newImage)*/
-
-        val imageFilter = ImageFilter(imagePreviewIV, activityVM.currentImage)
-        imageFilter.filterEvent(function, overlay, filter)
-        if (imageFilter.hasChanged())
-        {
-            Log.d("overlay image", "has changed is true")
-            if (overlay != null) {
-                activityVM.addLayer(overlay)
-            }
-            //TODO save change
-        }
-        else
-        {
-            Log.d("overlay image", "no change required")
         }
 
 
     }
-
-    /*
-    override fun applyFilterFRGOverlay(overlay: Bitmap) {
-
-        doAsync {
-
-            activityVM.currentImage = addImageOverlay(activityVM.currentImage, overlay)
-
-            uiThread {
-                imagePreviewIV.setImageBitmap(activityVM.currentImage)
-            }
-        }
-
-        activityVM.addLayer(overlay)
-
-    }*/
 
     private val colourChangeFRG : ColourChangeFRG = ColourChangeFRG()
     fun colourChange(view : View)
@@ -299,50 +216,29 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         openFragment.commit()
     }
 
-    //private var editHandler : EditEventHandler = EditEventHandler()
-
     override fun fromColourChangeFRG(function : String, paint: Paint) {
-        /*async {
 
-            val newImage : Bitmap = addColour(currentImage, paint)
+        doAsync {
+            val colourChange = ImageColour(imagePreviewIV, activityVM.currentImage)
+            colourChange.colourChangeEventProcessor(function, paint)
 
             uiThread {
-
-                imagePreviewIV.setImageBitmap(newImage)
+                if (colourChange.hasChanged()) {
+                    activityVM.currentImage = colourChange.getChangedImage()
+                    activityVM.addToHistory(activityVM.currentImage)
+                    Log.d("colour change", "image changed")
+                } else {
+                    Log.d("colour change", "no change required")
+                }
             }
-        }*/
-
-        val colourChange = ImageColour(imagePreviewIV, activityVM.currentImage)
-        colourChange.colourChangeEventProcessor(function, paint)
-        if (colourChange.hasChanged())
-        {
-            //TODO save change
         }
+
     }
-
-    /*
-    override fun applyColourChangeFRG(paint: Paint) {
-
-        *
-        async {
-
-            currentImage = addColour(currentImage, paint)
-
-            uiThread {
-
-                imagePreviewIV.setImageBitmap(currentImage)
-            }
-        }*
-
-        val colourChange = ImageColour(imagePreviewIV, currentImage)
-        colourChange.colourChangeEventProcessor("apply", paint)
-
-    }*/
 
     private val addTextFRG : AddTextFRG = AddTextFRG()
     fun addText(view : View)
     {
-        val fragIn : Bundle = Bundle()
+        val fragIn = Bundle()
         fragIn.putInt("posY", positionY)
         fragIn.putInt("posX", positionX)
 
@@ -360,7 +256,6 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
             val newImage : Bitmap = addText(activityVM.currentImage, message, X, Y, paintTxT)
 
-            //editHistory.add(newImage)
             activityVM.addToHistory(newImage)
 
             activityVM.currentImage = newImage
@@ -382,25 +277,19 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
     override fun fromCropFRG(function : String) {
 
-        //val crop : ImageCrop = ImageCrop(imagePreviewIV, currentImage)
-
-        /*
-        async {
-
-
-            val newImage : Bitmap = crop.cropSquare(cropFRG.shapeColour, currentImage, selector/*ImageSelection()*/)
-
+        doAsync {
+            val crop = ImageCrop(imagePreviewIV, activityVM.currentImage)
+            crop.cropEventProcessor(function, cropFRG.shapeColour, selector)
             uiThread {
-                imagePreviewIV.setImageBitmap(newImage)
+                if (crop.hasChanged()) {
+                    //TODO save cropped image
+                    activityVM.currentImage = crop.getChangedImage()
+                    activityVM.addToHistory(activityVM.currentImage)
+                    Log.d("crop change", "image changed")
+                } else {
+                    Log.d("crop image", "no change required")
+                }
             }
-        }*/
-
-
-        val crop : ImageCrop = ImageCrop(imagePreviewIV, activityVM.currentImage)
-        crop.cropEventProcessor(function, cropFRG.shapeColour, selector)
-        if (crop.hasChanged())
-        {
-            //TODO save cropped image
         }
 
     }
@@ -416,55 +305,24 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
     override fun fromRotateFRG(function : String, rotation: Float) {
 
-        /*
-
-        async {
-
-
-            val rotatedImage : Bitmap = rotate.rotateImage(currentImage, rotation)
-
+        doAsync {
+            val rotate = ImageRotate(imagePreviewIV, activityVM.currentImage)
+            rotate.rotateEventProcessor(function, rotation)
 
             uiThread {
-                imagePreviewIV.setImageBitmap(rotatedImage)
+                if (rotate.hasChanged()) {
+                    //TODO save cropped image
+                    activityVM.currentImage = rotate.getChangedImage()
+                    activityVM.addToHistory(activityVM.currentImage)
+                    Log.d("rotate change", "image changed")
+                }
+                else {
+                    Log.d("rotate change", "no change required")
+                }
             }
-        }*/
-
-
-        val rotate : ImageRotate = ImageRotate(imagePreviewIV, activityVM.currentImage)
-        rotate.rotateEventProcessor(function, rotation)
-        if (rotate.hasChanged())
-        {
-            //TODO save cropped image
         }
+
     }
-
-    /*
-    override fun applyRotate(rotation: Float) {
-
-        async {
-
-            *
-            val newImage : Bitmap = Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
-
-            val canvas : Canvas = Canvas(newImage)
-            canvas.save()
-            canvas.rotate(rotation, (canvas.width /2).toFloat(), (canvas.height / 2).toFloat())
-            canvas.drawBitmap(currentImage, 0.0f, 0.0f, null)
-            canvas.restore()
-
-            //TODO change edit history functionality as it would be quickly filled if saves every time it rotates
-            //editHistory.add(newImage)
-
-            currentImage = newImage*
-
-            currentImage = RotateImage(currentImage, rotation)
-
-            uiThread {
-                imagePreviewIV.setImageBitmap(currentImage)
-            }
-        }
-
-    }*/
 
     private val setDrawingFRG : drawFRG = drawFRG()
     private val setEnableDrawFRG : drawInstructFRG = drawInstructFRG()
@@ -472,7 +330,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
     fun drawOnImage(view : View)
     {
 
-        val fragIn : Bundle = Bundle()
+        val fragIn = Bundle()
         fragIn.putFloat("size", imageDraw.currentSize)
         fragIn.putInt("colour", imageDraw.currentColour)
 
@@ -486,63 +344,19 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
     }
 
     override fun fromDraw(size : Float, colour : Int) {
-
-
         imageDraw.changeSettings(size, colour)
+    }
 
-        /*
-
-        val paint = Paint().apply {
-            isAntiAlias = true
-            isDither = true
-            style = Paint.Style.STROKE
-            strokeJoin = Paint.Join.ROUND
-            strokeCap = Paint.Cap.ROUND
-            color = colour
-            strokeWidth = size
-        }
-
-        var path : Path = Path()
-        var currentX = 0f
-        var currentY = 0f
-
-        path.quadTo(currentX, currentY, (positionX + currentX) / 2, (positionY + currentY) / 2)
-        //currentX = motionTouchEventX
-        //currentY = motionTouchEventY
-        var newImage : Bitmap = Bitmap.createBitmap(activityVM.currentImage.width, activityVM.currentImage.height, Bitmap.Config.ARGB_8888)
-        var canvas : Canvas = Canvas(newImage)
-
-        canvas.drawPath(path, paint)
-
-        var anotherImage : Bitmap = Bitmap.createBitmap(activityVM.currentImage.width, activityVM.currentImage.height, Bitmap.Config.ARGB_8888)
-        canvas = Canvas(anotherImage)
-
-
-        val pathTwo : Path = Path()
-
-        pathTwo.quadTo(currentX, currentY, 0f, 150f)
-
-        canvas.drawPath(pathTwo, paint)
-
-        canvas.drawBitmap(newImage, 0f, 0f, null)
-
-        var oneMoreImage : Bitmap = Bitmap.createBitmap(activityVM.currentImage.width, activityVM.currentImage.height, Bitmap.Config.ARGB_8888)
-        canvas = Canvas(oneMoreImage)
-
-        val pathThree : Path = Path()
-        pathThree.quadTo(currentX, currentY, 200f, 20f)
-
-        canvas.drawPath(pathThree, paint)
-
-        canvas.drawBitmap(anotherImage, 0f, 0f, null)
-
-        imagePreviewIV.setImageBitmap(oneMoreImage)*/
+    override fun saveDraw() {
+        activityVM.currentImage = imageDraw.getDrawOnImage()!!
+        imagePreviewIV.setImageBitmap(activityVM.currentImage)
+        activityVM.addToHistory(activityVM.currentImage)
     }
 
     private val addGradientFRG : addGradientFRG = addGradientFRG()
     fun addGradient(view : View)
     {
-        val fragIn : Bundle = Bundle()
+        val fragIn = Bundle()
         fragIn.putFloat("height", activityVM.currentImage.height.toFloat())
         fragIn.putFloat("width", activityVM.currentImage.width.toFloat())
 
@@ -561,7 +375,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
             val newImage : Bitmap = activityVM.currentImage.copy(Bitmap.Config.ARGB_8888, true)
 
-            val canvas : Canvas = Canvas(newImage)
+            val canvas = Canvas(newImage)
             canvas.drawPaint(paint)
 
             uiThread {
@@ -572,7 +386,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
     }
 
     private val blurFRG : blurFRG = blurFRG()
-    public fun blurImage(view : View)
+    fun blurImage(view : View)
     {
         val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
         openFragment.replace(R.id.fragmentLocFrL, blurFRG)
@@ -582,36 +396,27 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
     override fun fromBlurFRG(function : String, blurAmount: Int) {
 
-        /*
-        async {
-            val blurredImage : Bitmap = blurImage(applicationContext, currentImage, blurAmount)
-            uiThread {
-                imagePreviewIV.setImageBitmap(blurredImage)
-            }
-        }*/
-
-        val blur : ImageBlur = ImageBlur(applicationContext,
+        val blur = ImageBlur(applicationContext,
             imagePreviewIV,
             activityVM.currentImage)
 
-        blur.blurEventProcessor(function, blurAmount)
-        if(blur.hasChanged())
-        {
-            //TODO saved rotate image
+        doAsync {
+
+            blur.blurEventProcessor(function, blurAmount)
+            uiThread {
+                if (blur.hasChanged()) {
+                    //TODO saved rotate image
+                    activityVM.currentImage = blur.getChangedImage()
+                    activityVM.addToHistory(activityVM.currentImage)
+                    Log.d("blur change", "image changed")
+                }
+                else {
+                    Log.d("blur change", "no change required")
+                }
+            }
         }
 
     }
-
-    /*
-    override fun applyBlur(blurAmount: Int) {
-        async {
-            val blurredImage : Bitmap = blurImage(applicationContext, currentImage, blurAmount)
-            currentImage = blurredImage
-            uiThread {
-                imagePreviewIV.setImageBitmap(currentImage)
-            }
-        }
-    }*/
 
     fun hideCurrentFragment(view : View)
     {

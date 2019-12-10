@@ -62,6 +62,10 @@ class drawInstructFRG : Fragment() {
 
         displayColourIV = view.findViewById(R.id.drawColourPreviewIV)
 
+        val saveBTN : ImageButton = view.findViewById(R.id.saveBTN)
+        saveBTN.setOnClickListener {
+            callback.saveDraw()
+        }
 
         val settingsBTN : ImageButton = view.findViewById(R.id.drawSettingsBTN)
         settingsBTN.setOnClickListener {
