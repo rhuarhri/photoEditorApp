@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import com.example.editorapp.imageHandling.EditHistoryManger
-import com.example.editorapp.imageHandling.LayerManager
 import com.example.editorapp.imageHandling.RetrieveImageHandler
 import org.jetbrains.anko.doAsync
 
@@ -33,17 +32,19 @@ class ImagePreviewActVM : ViewModel() {
             originalHeight, originalWidth)
 
         doAsync {
-            editHistory.add(currentImage)
+            //editHistory.add(currentImage)
+            editHistory.addLayer(currentImage)
         }
 
         val photoLayer = sentData.getStringExtra("layer")
 
-        layerManager = LayerManager(appContext)
-        layerManager.addLayer(currentImage)
+        //layerManager = LayerManager(appContext)
+        //addNewLayer(currentImage)
 
         if (photoLayer != null) {
             sentFilter = getImage.getBitmapFromResources(photoLayer.toInt())
-            layerManager.addLayer(sentFilter)
+            //addNewLayer(sentFilter)
+            editHistory.addLayer(sentFilter)
         }
 
     }
@@ -53,7 +54,11 @@ class ImagePreviewActVM : ViewModel() {
     private lateinit var editHistory : EditHistoryManger
     fun undo() : Bitmap
     {
-        currentImage = editHistory.undo()!!
+        val undoImage : Bitmap? = editHistory.undo()
+        if (undoImage != null)
+        {
+            currentImage = undoImage
+        }
         return currentImage
     }
 
@@ -68,42 +73,52 @@ class ImagePreviewActVM : ViewModel() {
     }
 
     //layer Manager code
-    private lateinit var layerManager : LayerManager
+    //private lateinit var layerManager : LayerManager
+
+    var layerPosition : Int = 0
+
+    /*
+    private fun addNewLayer(image : Bitmap)
+    {
+        layerManager.addLayer(image)
+        editHistory.addLayer()
+        editHistory.add(image, layerManager.getCurrentLayerLocation())
+    }*/
 
     fun getLayers() : Array<String>
     {
-        return layerManager.getLayerList()
+        return editHistory.getLayerList()
     }
 
     fun removeLayer(position : Int)
     {
-        layerManager.removeLayer(position)
+        editHistory.deleteLayer(position)
     }
 
     fun copyLayer(position: Int)
     {
         doAsync {
-            val copyLayer : Bitmap = layerManager.getLayer(position)!!
-            layerManager.addLayer(copyLayer)
+            editHistory.copyLayer(position)
         }
     }
 
     fun combineLayer() : Bitmap
     {
-        currentImage = layerManager.combineLayers(layerManager.getLayerList(), originalHeight, originalWidth)
+        //currentImage = editHistory.combineLayers(editHistory.getLayerList(), originalHeight, originalWidth)
+        currentImage = editHistory.combineLayers(editHistory.getLayerList(), currentImage.height, currentImage.width)
 
         return currentImage
     }
 
     fun viewLayer(position: Int) : Bitmap
     {
-        currentImage = layerManager.getLayer(position)!!
+        currentImage = editHistory.displayLayer(position)
         return currentImage
     }
 
     fun addLayer(image : Bitmap)
     {
-        layerManager.addLayer(image)
+        editHistory.addLayer(image)
     }
 
     //getters and setters

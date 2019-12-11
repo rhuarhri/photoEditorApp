@@ -1,5 +1,6 @@
 package com.example.editorapp.imageHandling
 
+/*
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -95,7 +96,14 @@ class LayerManager (context : Context){
         return newImage
     }
 
+    fun getCurrentLayerLocation() : Int
+    {
+        return if (currentLayer > 0) {
+            currentLayer
+        } else {
+            0
+        }
+    }
 
 
-
-}
+}*/

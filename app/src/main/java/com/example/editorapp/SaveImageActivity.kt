@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import com.example.editorapp.imageHandling.LayerManager
 import com.example.editorapp.imageHandling.SaveImageHandler
 import com.google.android.material.snackbar.Snackbar
 import org.jetbrains.anko.custom.async
@@ -32,6 +31,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import com.example.editorapp.imageHandling.EditHistoryManger
 import java.text.SimpleDateFormat
 
 
@@ -107,8 +107,8 @@ class SaveImageActivity : AppCompatActivity() {
 
         async {
 
-            val layerManager : LayerManager = LayerManager(applicationContext)
-            val newImage : Bitmap = layerManager.combineLayers(files, height, width)
+            val editHistory : EditHistoryManger = EditHistoryManger(applicationContext, height, width)
+            val newImage : Bitmap = editHistory.combineLayers(files, height, width)
 
             uiThread {
                 savingImage = newImage

@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.editorapp.R
-import com.example.editorapp.imageHandling.LayerManager
 import com.example.editorapp.imageHandling.RetrieveImageHandler
 import com.example.editorapp.slideShowCode.ShowLayerAdapter
 import com.example.editorapp.slideShowCode.ShowLayerListener

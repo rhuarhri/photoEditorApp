@@ -127,6 +127,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
     override fun fromLayerFRGView(position: Int) {
         doAsync{
+            activityVM.layerPosition = position
             val image : Bitmap = activityVM.viewLayer(position)
             uiThread {
                 imagePreviewIV.setImageBitmap(image)

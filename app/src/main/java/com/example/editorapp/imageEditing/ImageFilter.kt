@@ -60,7 +60,8 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
 
         val canvas: Canvas = Canvas(newImage)
         canvas.drawBitmap(currentImage, 0f, 0f, null)
-        canvas.drawBitmap(overlay, 0f, 0f, null)
+        val scaledImage : Bitmap = Bitmap.createScaledBitmap(overlay, currentImage.width, currentImage.height, false)
+        canvas.drawBitmap(scaledImage, 0f, 0f, null)
 
         return newImage
     }
