@@ -6,6 +6,8 @@ class ImageSelection {
 
     private var isSelecting = false
 
+    var startX : Int = 0
+    var startY : Int = 0
     var X : Int = 0
     var Y : Int = 0
     var height : Int = 0
@@ -16,6 +18,8 @@ class ImageSelection {
     fun setPosition(posX : Int, posY : Int)
     {
         isSelecting = true
+        startX = posX
+        startY = posY
         X = posX
         Y = posY
     }

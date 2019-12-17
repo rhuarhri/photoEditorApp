@@ -100,7 +100,8 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
         if (currentLayer < maxLayers)
         {
             currentLayer++
-            imageLayers.add(arrayListOf())
+            Log.d("layer", "layer added at location $currentLayer")
+            imageLayers.add(arrayListOf<String>())
 
             imageLayers[currentLayer].add(saveImage.savedPhotoPath)
 
@@ -108,13 +109,36 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
 
     }
 
+    private fun addLayerAt(image : Bitmap, location : Int)
+    {
+        saveImage.savePhoto(image, null, null)
+
+        Log.d("layer", "adding layer at $location")
+
+        if (currentLayer < maxLayers)
+        {
+            imageLayers.add(location, arrayListOf<String>())
+
+            imageLayers[location].add(saveImage.savedPhotoPath)
+        }
+    }
+
     fun getLayerList() : Array<String>
     {
+
+        Log.d("layer location", "the location is $currentLayer")
+
         val showingLayers : ArrayList<String> = arrayListOf()
+
+        var test : Int = 0
 
         for (layer in imageLayers)
         {
-            showingLayers.add(layer.last())
+
+                Log.d("layer", "layer found at location $test")
+                test++
+                showingLayers.add(layer.last())
+
         }
 
         return showingLayers.toTypedArray()
@@ -152,7 +176,7 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
         currentLayer = position
         val copyImagePath = imageLayers[currentLayer].last()
         val copyImage : Bitmap = getImage.getBitmapFromFile(copyImagePath)
-        addLayer(copyImage)
+        addLayerAt(copyImage, currentLayer++)
         return copyImage
     }
 

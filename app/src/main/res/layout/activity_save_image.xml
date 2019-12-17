@@ -64,6 +64,7 @@
         android:backgroundTint="@color/colorSecondaryText"
         android:ems="10"
         android:inputType="textPersonName"
+        android:textColor="@color/colorSecondaryText"
         app:layout_constraintBottom_toTopOf="@+id/savedEditBTN"
         app:layout_constraintStart_toStartOf="parent" />
 

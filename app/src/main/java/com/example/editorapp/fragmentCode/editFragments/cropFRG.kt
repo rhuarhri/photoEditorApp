@@ -13,7 +13,7 @@ import com.example.editorapp.R
 
 class cropFRG : Fragment() {
 
-    public val shapeColour : String = "#000000"
+    val shapeColour : String = "#000000"
 
     private lateinit var callback : FromFragment
 

@@ -3,6 +3,10 @@ package com.example.editorapp.imageEditing
 import android.graphics.*
 import android.util.Log
 import android.widget.ImageView
+import android.R.attr.y
+import android.R.attr.x
+
+
 
 class ImageCrop (private val imagePreview : ImageView, private var originalImage : Bitmap) {
 
@@ -75,11 +79,19 @@ class ImageCrop (private val imagePreview : ImageView, private var originalImage
 
         cropCanvas.drawBitmap(rectImage, 0f,0f, paintMask)
 
-        val resizedImage : Bitmap = Bitmap.createBitmap(selector.width, selector.height, Bitmap.Config.ARGB_8888)
+        val croppedImage : Bitmap = Bitmap.createBitmap(selector.width, selector.height, Bitmap.Config.ARGB_8888)
 
-        val resizeCanvas = Canvas(resizedImage)
+        val resizeCanvas = Canvas(croppedImage)
 
-        resizeCanvas.drawBitmap(newImage, (0 - selector.X.toFloat()), (0-selector.Y.toFloat()), null)
+        resizeCanvas.drawBitmap(newImage, (0 - (selector.X.toFloat())), (0 - selector.Y.toFloat()), null)
+
+        val resizedImage : Bitmap = Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
+        val placeCanvas = Canvas(resizedImage)
+
+        val left = (selector.X.toFloat())
+        val top = (selector.Y.toFloat())
+
+        placeCanvas.drawBitmap(croppedImage, left, top, null)
 
         return resizedImage
     }
