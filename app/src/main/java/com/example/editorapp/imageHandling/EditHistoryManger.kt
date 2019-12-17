@@ -10,8 +10,6 @@ import android.util.Log
 class EditHistoryManger(appContext : Context, private val imageHeight : Int, private val imageWidth : Int) {
 
     private val lastEditedKey : String = "last_edited_image"
-    private var currentKeyValue : Int = 0
-    private val maxEntryAmount : Int = 10
 
     private var saveImage : SaveImageHandler
     private var getImage : RetrieveImageHandler
@@ -21,7 +19,6 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
     private var preferencesEditor : SharedPreferences.Editor
     private val imageLayers : ArrayList<ArrayList<String>> = arrayListOf()
     private val imageHistory : ArrayList<String> = arrayListOf()
-    //private val imageHistory : Array<String?> = arrayOf(null, null, null, null, null, null, null, null, null, null)
     val name : String = "edit_history"
 
     init {
@@ -34,8 +31,6 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
 
     fun recordLocation()
     {
-        //TODO all the layers need to be joined before last image saved
-
         val combinedImage : Bitmap = combineLayers(getLayerList(), imageHeight, imageWidth)
 
         saveImage.savePhoto(combinedImage, null, null)
@@ -97,7 +92,7 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
 
     private var currentLayer : Int = -1 //so the first layer being add is 0
     private val maxLayers : Int = 9 //i.e. 10 layers 0 to 9
-    fun addLayer(image : Bitmap) //: Boolean
+    fun addLayer(image : Bitmap)
     {
 
         saveImage.savePhoto(image, null, null)
@@ -105,7 +100,7 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
         if (currentLayer < maxLayers)
         {
             currentLayer++
-            imageLayers.add(arrayListOf<String>())
+            imageLayers.add(arrayListOf())
 
             imageLayers[currentLayer].add(saveImage.savedPhotoPath)
 
@@ -129,7 +124,7 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
     {
         val newImage : Bitmap = Bitmap.createBitmap(height, width, Bitmap.Config.ARGB_8888)
 
-        val canvas : Canvas = Canvas(newImage)
+        val canvas = Canvas(newImage)
 
         for (i in layers)
         {
@@ -178,53 +173,6 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
 
         imageLayers[currentLayer].add(saveImage.savedPhotoPath)
 
-
-
-
-
-
-        /*
-
-
-
-
-        if (imageLayers[layerID].isNotEmpty())
-        {
-            imageLayers[layerID].add(saveImage.savedPhotoPath)
-        }
-        else
-        {
-
-        }
-
-        currentLocation++
-
-        if (imageHistory[currentLocation] == null)
-        {
-            imageHistory[currentLocation] = saveImage.savedPhotoPath
-        }
-        else
-        {
-            deleteImage.removeImage(imageHistory[currentLocation]!!)
-            imageHistory[currentLocation] = saveImage.savedPhotoPath
-        }
-        *
-        if (appPreferences.contains("${getKeyValue()}"))
-        {
-            val fileLocation : String = appPreferences.getString("$currentKeyValue", "")!!
-            //Log.d("removed image", "The removed image is $fileLocation")
-            deleteImage.removeImage(fileLocation)
-            preferencesEditor.putString("$currentKeyValue", saveImage.savedPhotoPath)
-            preferencesEditor.apply()
-        }
-        else
-        {
-            preferencesEditor.putString("$currentKeyValue", saveImage.savedPhotoPath)
-            preferencesEditor.apply()
-        }*
-
-         */
-
     }
 
     fun undo() : Bitmap?
@@ -254,62 +202,6 @@ class EditHistoryManger(appContext : Context, private val imageHeight : Int, pri
             return null
         }
 
-        /*
-        if (imageHistory[currentLocation] != null)
-        {
-            deleteImage.removeImage(imageHistory[currentLocation]!!)
-            imageHistory[currentLocation] = null
-
-            if (currentLocation > 0)
-            {
-                currentLocation--
-            }
-            else
-            {
-                currentLocation = imageHistory.size - 1
-            }
-
-            val fileLoc : String = imageHistory[currentLocation]!!
-
-            val foundImage : Bitmap = getImage.getBitmapFromFile(fileLoc)
-
-            return foundImage
-        }
-        else
-        {
-            return null
-        }
-        *
-        if (appPreferences.contains("$currentKeyValue"))
-        {
-
-            var fileLocation : String = appPreferences.getString("$currentKeyValue", "")!!
-            deleteImage.removeImage(fileLocation)
-
-            if (currentKeyValue != 0){
-                --currentKeyValue
-            }
-            else
-            {
-                currentKeyValue = maxEntryAmount
-            }
-
-            if (appPreferences.contains("$currentKeyValue")) {
-                fileLocation = appPreferences.getString("$currentKeyValue", "")!!
-                val foundImage : Bitmap = getImage.getBitmapFromFile(fileLocation)
-
-                return foundImage
-            }
-            else
-            {
-                return null
-            }
-
-        }
-        else
-        {
-         return null
-        }*/
 
     }
 

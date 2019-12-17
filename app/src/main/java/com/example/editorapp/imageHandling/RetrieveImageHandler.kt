@@ -4,13 +4,10 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.ImageView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.annotation.GlideModule
 import com.example.editorapp.R
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
-import java.net.HttpURLConnection
 
 /*
 This could be easily done with glide an image processing library but it
@@ -82,24 +79,6 @@ class RetrieveImageHandler(private val context : Context) {
 
     fun getBitmapFromFile(filePath : String?) : Bitmap
     {
-        /*
-        if (filePath == "" || filePath == null)
-        {
-            return setDefault(100, 100)
-        }else{
-            val imageFile = File(filePath)
-
-            val foundImage : Bitmap? = BitmapFactory.decodeStream(FileInputStream(imageFile) as InputStream?, null, null)
-
-            if (foundImage == null)
-            {
-                return setDefault(100, 100)
-            }
-            else
-            {
-                return foundImage
-            }
-        }*/
 
         return fromFile(filePath, null, null)
 
@@ -107,27 +86,7 @@ class RetrieveImageHandler(private val context : Context) {
 
     fun formatBitmapFromFile(filePath: String?, height: Int, width: Int) : Bitmap
     {
-        /*
-        if (filePath == "" || filePath == null)
-        {
-            return setDefault(height, width)
-        }else{
-            val imageFile = File(filePath)
-
-            val foundImage : Bitmap? = BitmapFactory.decodeStream(FileInputStream(imageFile) as InputStream?, null, imageOptions(height, width))
-
-            if (foundImage == null)
-            {
-                return setDefault(height, width)
-            }
-            else
-            {
-                return foundImage
-            }
-        }*/
-
         return fromFile(filePath, height, width)
-
     }
 
     private fun fromResource(location : Int, height: Int?, width: Int?) : Bitmap
@@ -158,53 +117,15 @@ class RetrieveImageHandler(private val context : Context) {
 
     fun getBitmapFromResources(location : Int) : Bitmap
     {
-        /*
-        val foundImage : Bitmap? = BitmapFactory.decodeResource(context.resources, location, null)
-        if (foundImage == null)
-        {
-            return setDefault(100, 100)
-        }
-        else
-        {
-            return foundImage
-        }*/
 
         return fromResource(location, null, null)
     }
 
     fun formatBitmapFromResources(location : Int, height : Int, width : Int) : Bitmap
     {
-        /*
-        val foundImage : Bitmap? = BitmapFactory.decodeResource(context.resources, location, imageOptions(height, width))
-        if (foundImage == null)
-        {
-            return setDefault(height, width)
-        }
-        else
-        {
-            return foundImage
-        }*/
 
         return fromResource(location, height, width)
     }
-
-
-    /*
-    fun getBitmapFromURL(imageURL : String?, height : Int, width : Int) : Bitmap?
-    {
-        return if (imageURL == "" || imageURL == null) {
-            setDefault(height, width)
-        } else {
-
-            val url = java.net.URL(imageURL)
-            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-            connection.connect()
-
-            val inStream: InputStream = connection.inputStream
-
-            BitmapFactory.decodeStream(inStream, null, imageOptions(height, width))
-        }
-    }*/
 
 
     //returns default image if file or input stream is empty
@@ -223,7 +144,7 @@ class RetrieveImageHandler(private val context : Context) {
 
     fun recyclerViewImageHandler(desiredIV : ImageView, imageLocation : String, isFile : Boolean)
     {
-        var image =
+        val image =
         if (isFile) {
             imageLocation
         }

@@ -1,20 +1,16 @@
 package com.example.editorapp.imageEditing
 
 import android.graphics.*
-import android.util.Log
 import android.widget.ImageView
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
-import java.util.*
 
 class ImageFilter(private val imagePreview : ImageView, private var originalImage : Bitmap) {
 
     private var changeApplied : Boolean = false
+    private var changedImage : Bitmap? = null
 
-    public fun filterEvent(function : String, overlay: Bitmap?, filter : String)
+    fun filterEvent(function : String, overlay: Bitmap?, filter : String)
     {
 
-            var changedImage : Bitmap? = null
             when(function){
                 "filter" ->
                 {
@@ -49,16 +45,21 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
 
     }
 
-    public fun hasChanged() : Boolean
+    fun hasChanged() : Boolean
     {
         return changeApplied
+    }
+
+    fun getChangedImage() : Bitmap
+    {
+        return changedImage!!
     }
 
     private fun addImageOverlay(currentImage: Bitmap, overlay: Bitmap): Bitmap {
         val newImage: Bitmap =
             Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
 
-        val canvas: Canvas = Canvas(newImage)
+        val canvas = Canvas(newImage)
         canvas.drawBitmap(currentImage, 0f, 0f, null)
         val scaledImage : Bitmap = Bitmap.createScaledBitmap(overlay, currentImage.width, currentImage.height, false)
         canvas.drawBitmap(scaledImage, 0f, 0f, null)
@@ -71,15 +72,15 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
         val newImage: Bitmap =
             Bitmap.createBitmap(currentImage.width, currentImage.height, Bitmap.Config.ARGB_8888)
 
-        val canvas: Canvas = Canvas(newImage)
+        val canvas = Canvas(newImage)
 
-        val paint : Paint = Paint()
+        val paint = Paint()
 
         when(filter)
         {
             "alpha blue" ->
             {
-                val alphaBlueCM : ColorMatrix = ColorMatrix(floatArrayOf(
+                val alphaBlueCM = ColorMatrix(floatArrayOf(
                     0f,    0f,    0f, 0f,   0f,
                     0.3f,    0f,    0f, 0f,  50f,
                     0f,    0f,    0f, 0f, 255f,
@@ -94,9 +95,9 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
                 val m = 255f
                 val t = -255 * 128f
 
-                val baseValue : Float = 0f
+                val baseValue = 0f
 
-                val binaryCM : ColorMatrix = ColorMatrix(
+                val binaryCM = ColorMatrix(
                     floatArrayOf(
                         m, baseValue, baseValue, 1f, t,
                         baseValue, m, baseValue, 1f, t,
@@ -105,7 +106,7 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
                     )
                 )
 
-                val satCM : ColorMatrix = ColorMatrix()
+                val satCM = ColorMatrix()
                 satCM.setSaturation(0f)
                 satCM.postConcat(binaryCM)
 
@@ -115,7 +116,7 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
             }
             "gray scale"->
             {
-                val grayCM : ColorMatrix = ColorMatrix()
+                val grayCM = ColorMatrix()
                 grayCM.setSaturation(0f)
 
                 val grayFilter : ColorFilter = ColorMatrixColorFilter(grayCM)
@@ -124,7 +125,7 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
             }
             "invert"->
             {
-                val invertCM : ColorMatrix = ColorMatrix(floatArrayOf(
+                val invertCM = ColorMatrix(floatArrayOf(
                     -1f,  0f,  0f,  0f, 255f,
                     0f, -1f,  0f,  0f, 255f,
                     0f,  0f, -1f,  0f, 255f,
@@ -136,7 +137,7 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
             }
             "old style"->
             {
-                val oldStyleCM : ColorMatrix = ColorMatrix(floatArrayOf(
+                val oldStyleCM = ColorMatrix(floatArrayOf(
                     0.5f,    0.5f,    0.5f, 0f, 0f,
                     0.5f,    0.5f,    0.5f, 0f, 0f,
                     0.5f,    0.5f,    0.5f, 0f, 0f,
@@ -149,7 +150,7 @@ class ImageFilter(private val imagePreview : ImageView, private var originalImag
             }
             "sepia"->
             {
-                val sepiaCM : ColorMatrix = ColorMatrix()
+                val sepiaCM = ColorMatrix()
                 sepiaCM.setScale(1f, 1f, 0.8f, 1f)
 
                 val sepiaFilter : ColorFilter = ColorMatrixColorFilter(sepiaCM)

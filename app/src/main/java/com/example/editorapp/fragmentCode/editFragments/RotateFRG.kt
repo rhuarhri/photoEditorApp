@@ -3,6 +3,7 @@ package com.example.editorapp.fragmentCode.editFragments
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +13,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.editorapp.R
 
-class blurFRG: Fragment() {
+class RotateFRG : Fragment() {
 
-    private var blurAmount : Int = 0
+    private var degrees : Int = 0
+
 
     private lateinit var callback : FromFragment
 
@@ -38,24 +40,42 @@ class blurFRG: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val blurSB : SeekBar = view.findViewById(R.id.selectionSB)
-        blurSB.max = 25
-        blurSB.progress = 0
+        val rotateSB : SeekBar = view.findViewById(R.id.selectionSB)
+        rotateSB.max = 360
+        rotateSB.progress = 0
 
-        blurSB.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        rotateSB.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                blurAmount = progress
-                callback.fromBlurFRG("preview", blurAmount)
+
+                var difference : Int = 0
+
+                if (degrees > progress)
+                {
+                    difference = 0 - Math.abs((degrees - progress))
+                    degrees += difference
+                }
+                else if (degrees < progress)
+                {
+                    difference = 0 + Math.abs((degrees - progress))
+                    degrees += difference
+                }
+
+                callback.fromRotateFRG("preview", degrees.toFloat())
+
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-            })
+
+        })
 
         val applyBTN : ImageButton = view.findViewById(R.id.applyBTN)
 
         applyBTN.setOnClickListener {
-            callback.fromBlurFRG("apply", blurAmount)
+
+            callback.fromRotateFRG("apply", degrees.toFloat())
+
         }
     }
+
 }

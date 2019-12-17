@@ -21,12 +21,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.util.*
-import android.R.attr.description
-import android.content.ContentValues
 import android.content.Intent
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.core.app.ActivityCompat
@@ -41,7 +36,6 @@ class SaveImageActivity : AppCompatActivity() {
     private lateinit var savingImage : Bitmap
     private lateinit var typeSpn : Spinner
     private lateinit var nameET : EditText
-    //private lateinit var locationET : EditText
 
     private var type : String = ""
 
@@ -95,9 +89,7 @@ class SaveImageActivity : AppCompatActivity() {
 
         }
 
-
         nameET = findViewById(R.id.nameET)
-        //locationET = findViewById(R.id.locationET)
 
         val extras : Bundle = intent.extras!!
 
@@ -137,55 +129,21 @@ class SaveImageActivity : AppCompatActivity() {
         }
     }
 
-    public fun createImage(view : View)
+    fun createImage(view : View)
     {
         val name : String = nameET.text.toString()
 
-        //val saveImage : SaveImageHandler = SaveImageHandler(applicationContext)
+        val saveImage = SaveImageHandler(applicationContext)
 
-        // Get the context wrapper instance
-        val wrapper = ContextWrapper(applicationContext)
+        saveImage.savePhoto(savingImage, name, type)
 
-        // Initializing a new file
-        // The bellow line return a directory in internal storage
-        //var path = wrapper.getDir("Pictures", Context.MODE_PRIVATE)
-
-        val path = Environment.getExternalStorageDirectory().toString()
-        //Log.d("image file path", "Path: $path")
-
-
-        // Create a file to save the image
-        var file = File(path, "testImageName.jpg")
-
-        /*
-        try {
-            // Get the file output stream
-            val stream: OutputStream = FileOutputStream(file)
-
-            // Compress bitmap
-            savingImage.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-
-            // Flush the stream
-            stream.flush()
-
-            // Close stream
-            stream.close()
-
-            Snackbar.make(view, "image saved", Snackbar.LENGTH_SHORT).show()
-        } catch (e: IOException){ // Catch the exception
-            e.printStackTrace()
-        }*/
-
-        saveImageWithMediaStore()
-
-        //saveImage.savePhoto(savingImage, name, type)
-
+        Snackbar.make(view, "image saved", Snackbar.LENGTH_SHORT).show()
 
     }
 
     val REQUEST_TAKE_PHOTO = 1
 
-    public fun saveImageWithMediaStore()
+    fun saveImageWithMediaStore()
     {
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             // Ensure that there's a camera activity to handle the intent
@@ -195,7 +153,6 @@ class SaveImageActivity : AppCompatActivity() {
                     createImageFile()
                 } catch (ex: IOException) {
                     // Error occurred while creating the File
-                    //...
                     null
                 }
                 // Continue only if the File was successfully created
@@ -205,15 +162,13 @@ class SaveImageActivity : AppCompatActivity() {
                         "com.example.android.fileprovider",
                         it
                     )
-                    //takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    //startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO)
                 }
 
                 val wrapper = ContextWrapper(applicationContext)
 
-                var path = wrapper.getDir("Pictures", Context.MODE_PRIVATE)
+                val path = wrapper.getDir("Pictures", Context.MODE_PRIVATE)
 
-                var file = File(path, "testImageName.jpg")
+                val file = File(path, "testImageName.jpg")
 
                 val stream: OutputStream = FileOutputStream(file)
 

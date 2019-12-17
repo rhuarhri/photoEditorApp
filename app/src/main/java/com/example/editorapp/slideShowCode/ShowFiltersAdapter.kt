@@ -1,7 +1,6 @@
 package com.example.editorapp.slideShowCode
 
 import android.content.Context
-import android.view.ViewGroup
 
 class ShowFiltersAdapter(private val context : Context, private val images : Array<String>, private val areFiles : Boolean, private var slideShowListener : SlideShowListener)
     : SlideShowAdapter(context, images, slideShowListener) {

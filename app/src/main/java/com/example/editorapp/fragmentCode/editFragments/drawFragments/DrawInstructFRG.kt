@@ -3,7 +3,6 @@ package com.example.editorapp.fragmentCode.editFragments.drawFragments
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.editorapp.R
 import com.example.editorapp.fragmentCode.editFragments.FromFragment
 
-class drawInstructFRG : Fragment() {
+class DrawInstructFRG : Fragment() {
 
     private lateinit var callback : FromFragment
     override fun onAttach(context: Context) {
@@ -28,7 +27,7 @@ class drawInstructFRG : Fragment() {
         }
         catch(e : Exception)
         {
-            Toast.makeText(context, "error is ${e.toString()}", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "error is $e", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -69,7 +68,7 @@ class drawInstructFRG : Fragment() {
 
         val settingsBTN : ImageButton = view.findViewById(R.id.drawSettingsBTN)
         settingsBTN.setOnClickListener {
-            val setDrawingFRG : drawFRG = drawFRG()
+            val setDrawingFRG = DrawFRG()
             val openFragment : FragmentTransaction = activity!!.supportFragmentManager.beginTransaction()
             openFragment.replace(R.id.fragmentLocFrL, setDrawingFRG)
 

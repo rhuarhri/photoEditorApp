@@ -6,10 +6,10 @@ class RemoveImageHandler {
 
     fun removeImage(imageFilePath : String) : Boolean
     {
-        var successful : Boolean = false
+        var successful = false
         if (imageFilePath != "")
         {
-            val currentImage : File = File(imageFilePath)
+            val currentImage = File(imageFilePath)
             if (currentImage.exists())
             {
                 currentImage.delete()

@@ -3,7 +3,7 @@ package com.example.editorapp.imageEditing
 import android.graphics.*
 import android.view.MotionEvent
 
-class ImageDraw() {
+class ImageDraw {
 
     private lateinit var lastDrawing : Bitmap
     private var currentImage : Bitmap? = null
@@ -16,8 +16,8 @@ class ImageDraw() {
         strokeCap = Paint.Cap.ROUND
     }
 
-    public var currentSize : Float = 0f
-    public var currentColour : Int = 0
+    var currentSize : Float = 0f
+    var currentColour : Int = 0
 
     private val path : Path = Path()
 
@@ -29,7 +29,7 @@ class ImageDraw() {
     }
 
 
-    public fun touchEventHandler(event : MotionEvent, positionX : Int, positionY : Int, image : Bitmap)
+    fun touchEventHandler(event : MotionEvent, positionX : Int, positionY : Int, image : Bitmap)
     {
 
             when(event.action) {
@@ -51,11 +51,11 @@ class ImageDraw() {
         currentImage = image
     }
 
-    public fun getDrawOnImage() : Bitmap?
+    fun getDrawOnImage() : Bitmap?
     {
         if (currentImage != null) {
             val newImage = Bitmap.createBitmap(currentImage!!.width, currentImage!!.height, Bitmap.Config.ARGB_8888)
-            val canvas: Canvas = Canvas(newImage)
+            val canvas = Canvas(newImage)
             canvas.drawBitmap(currentImage!!, 0f, 0f, null)
             canvas.drawBitmap(lastDrawing, 0f, 0f, null)
             currentImage = newImage
@@ -63,7 +63,7 @@ class ImageDraw() {
         return currentImage
     }
 
-    public fun changeSettings(size : Float, colour : Int)
+    fun changeSettings(size : Float, colour : Int)
     {
         paint.strokeWidth = size
         currentSize = size
@@ -96,7 +96,7 @@ class ImageDraw() {
             currentY = newY
 
             val newImage : Bitmap = Bitmap.createBitmap(lastDrawing.width, lastDrawing.height, Bitmap.Config.ARGB_8888)
-            val canvas : Canvas = Canvas(newImage)
+            val canvas = Canvas(newImage)
             canvas.drawPath(path, paint)
 
             canvas.drawBitmap(lastDrawing, 0f, 0f, null)
@@ -113,7 +113,7 @@ class ImageDraw() {
         val errorX : Float = Math.abs(newX - currentX)
         val errorY : Float = Math.abs(newY - currentY)
 
-        val errorAmount : Float = 5f
+        val errorAmount = 5f
 
         return errorX <= errorAmount || errorY <= errorAmount
     }

@@ -11,8 +11,8 @@ import android.widget.ImageView
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
 import com.example.editorapp.fragmentCode.editFragments.*
-import com.example.editorapp.fragmentCode.editFragments.drawFragments.drawFRG
-import com.example.editorapp.fragmentCode.editFragments.drawFragments.drawInstructFRG
+import com.example.editorapp.fragmentCode.editFragments.drawFragments.DrawFRG
+import com.example.editorapp.fragmentCode.editFragments.drawFragments.DrawInstructFRG
 import com.example.editorapp.imageEditing.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -88,12 +88,10 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
     }
 
-    private val layerFRG : layerFRG = layerFRG()
+    private val layerFRG : LayerFRG = LayerFRG()
     fun layersNav(view : View)
     {
-
         val fragIn = Bundle()
-        Log.d("layers", "layer amount is ${activityVM.getLayers().size}")
         fragIn.putStringArray("layers", activityVM.getLayers())
 
         layerFRG.arguments = fragIn
@@ -115,13 +113,11 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         doAsync {
             activityVM.removeLayer(position)
         }
-        Log.d("Layer deleted", "layer deleted at position $position")
         hideLayerFRGAfterAction()
     }
 
     override fun fromLayerFRGCopy(position: Int) {
         activityVM.copyLayer(position)
-        Log.d("Layer copied", "layer copied at position $position")
         hideLayerFRGAfterAction()
     }
 
@@ -146,7 +142,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
     }
 
     private val selector : ImageSelection = ImageSelection()
-    private val selectFRG : selectFRG = selectFRG()
+    private val selectFRG : SelectFRG = SelectFRG()
     fun selectImage(view : View)
     {
         selector.setPosition(positionX, positionY)
@@ -172,7 +168,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         }
     }
 
-    private val filterFRG : filterFRG = filterFRG()
+    private val filterFRG : FilterFRG = FilterFRG()
     fun addFilter(view : View)
     {
         val fragIn = Bundle()
@@ -198,7 +194,10 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
                     if (overlay != null) {
                         activityVM.addLayer(overlay)
                     }
-                    //TODO save change
+                    if (filter != "")
+                    {
+                        activityVM.addToHistory(imageFilter.getChangedImage())
+                    }
                 } else {
                     Log.d("overlay image", "no change required")
                 }
@@ -227,9 +226,6 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
                 if (colourChange.hasChanged()) {
                     activityVM.currentImage = colourChange.getChangedImage()
                     activityVM.addToHistory(activityVM.currentImage)
-                    Log.d("colour change", "image changed")
-                } else {
-                    Log.d("colour change", "no change required")
                 }
             }
         }
@@ -267,7 +263,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         }
     }
 
-    private val cropFRG : cropFRG = cropFRG()
+    private val cropFRG : CropFRG = CropFRG()
     fun cropImage(view : View)
     {
         val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -283,19 +279,15 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
             crop.cropEventProcessor(function, cropFRG.shapeColour, selector)
             uiThread {
                 if (crop.hasChanged()) {
-                    //TODO save cropped image
                     activityVM.currentImage = crop.getChangedImage()
                     activityVM.addToHistory(activityVM.currentImage)
-                    Log.d("crop change", "image changed")
-                } else {
-                    Log.d("crop image", "no change required")
                 }
             }
         }
 
     }
 
-    private val rotateImageFRG : rotateFRG = rotateFRG()
+    private val rotateImageFRG : RotateFRG = RotateFRG()
     fun rotateImage(view : View)
     {
         val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -312,21 +304,16 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
             uiThread {
                 if (rotate.hasChanged()) {
-                    //TODO save cropped image
                     activityVM.currentImage = rotate.getChangedImage()
                     activityVM.addToHistory(activityVM.currentImage)
-                    Log.d("rotate change", "image changed")
-                }
-                else {
-                    Log.d("rotate change", "no change required")
                 }
             }
         }
 
     }
 
-    private val setDrawingFRG : drawFRG = drawFRG()
-    private val setEnableDrawFRG : drawInstructFRG = drawInstructFRG()
+    private val setDrawingFRG : DrawFRG = DrawFRG()
+    private val setEnableDrawFRG : DrawInstructFRG = DrawInstructFRG()
     private val imageDraw : ImageDraw = ImageDraw()
     fun drawOnImage(view : View)
     {
@@ -354,7 +341,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         activityVM.addToHistory(activityVM.currentImage)
     }
 
-    private val addGradientFRG : addGradientFRG = addGradientFRG()
+    private val addGradientFRG : AddGradientFRG = AddGradientFRG()
     fun addGradient(view : View)
     {
         val fragIn = Bundle()
@@ -386,7 +373,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         }
     }
 
-    private val blurFRG : blurFRG = blurFRG()
+    private val blurFRG : BlurFRG = BlurFRG()
     fun blurImage(view : View)
     {
         val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -406,13 +393,8 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
             blur.blurEventProcessor(function, blurAmount)
             uiThread {
                 if (blur.hasChanged()) {
-                    //TODO saved rotate image
                     activityVM.currentImage = blur.getChangedImage()
                     activityVM.addToHistory(activityVM.currentImage)
-                    Log.d("blur change", "image changed")
-                }
-                else {
-                    Log.d("blur change", "no change required")
                 }
             }
         }

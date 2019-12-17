@@ -31,20 +31,15 @@ class ImagePreviewActVM : ViewModel() {
         editHistory = EditHistoryManger(appContext,
             originalHeight, originalWidth)
 
-        doAsync {
-            //editHistory.add(currentImage)
-            editHistory.addLayer(currentImage)
-        }
 
         val photoLayer = sentData.getStringExtra("layer")
 
-        //layerManager = LayerManager(appContext)
-        //addNewLayer(currentImage)
+        editHistory.addLayer(currentImage)
 
         if (photoLayer != null) {
             sentFilter = getImage.getBitmapFromResources(photoLayer.toInt())
-            //addNewLayer(sentFilter)
             editHistory.addLayer(sentFilter)
+            currentImage = sentFilter
         }
 
     }
@@ -72,18 +67,7 @@ class ImagePreviewActVM : ViewModel() {
         editHistory.add(image)
     }
 
-    //layer Manager code
-    //private lateinit var layerManager : LayerManager
-
     var layerPosition : Int = 0
-
-    /*
-    private fun addNewLayer(image : Bitmap)
-    {
-        layerManager.addLayer(image)
-        editHistory.addLayer()
-        editHistory.add(image, layerManager.getCurrentLayerLocation())
-    }*/
 
     fun getLayers() : Array<String>
     {
@@ -104,7 +88,6 @@ class ImagePreviewActVM : ViewModel() {
 
     fun combineLayer() : Bitmap
     {
-        //currentImage = editHistory.combineLayers(editHistory.getLayerList(), originalHeight, originalWidth)
         currentImage = editHistory.combineLayers(editHistory.getLayerList(), currentImage.height, currentImage.width)
 
         return currentImage
@@ -131,11 +114,5 @@ class ImagePreviewActVM : ViewModel() {
     {
         return originalWidth
     }
-
-    /*
-    public fun getCurrentImage() : Bitmap
-    {
-        return currentImage
-    }*/
 
 }

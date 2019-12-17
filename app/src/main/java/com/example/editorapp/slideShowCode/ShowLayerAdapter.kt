@@ -1,14 +1,11 @@
 package com.example.editorapp.slideShowCode
 
-import android.app.Activity
+
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import com.example.editorapp.R
 import com.example.editorapp.imageHandling.RetrieveImageHandler

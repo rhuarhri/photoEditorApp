@@ -2,7 +2,6 @@ package com.example.editorapp.fragmentCode.editFragments
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,17 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.editorapp.R
-import com.example.editorapp.imageHandling.RetrieveImageHandler
 import com.example.editorapp.slideShowCode.ShowLayerAdapter
 import com.example.editorapp.slideShowCode.ShowLayerListener
-import com.example.editorapp.slideShowCode.SlideShowAdapter
-import com.example.editorapp.slideShowCode.SlideShowListener
-import com.example.nn4wchallenge.database.external.DataTranslation
-import com.google.android.material.snackbar.Snackbar
-import org.jetbrains.anko.custom.async
-import org.jetbrains.anko.uiThread
 
-class layerFRG : Fragment(), ShowLayerListener {
+
+class LayerFRG : Fragment(), ShowLayerListener {
 
     private lateinit var appContext: Context
 

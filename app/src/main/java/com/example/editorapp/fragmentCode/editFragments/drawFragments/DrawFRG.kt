@@ -14,7 +14,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.editorapp.R
 import com.example.editorapp.fragmentCode.editFragments.FromFragment
 
-class drawFRG : Fragment() {
+class DrawFRG : Fragment() {
 
     private lateinit var callback : FromFragment
     override fun onAttach(context: Context) {
@@ -26,7 +26,7 @@ class drawFRG : Fragment() {
         }
         catch(e : Exception)
         {
-            Toast.makeText(context, "error is ${e.toString()}", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "error is $e", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -40,14 +40,6 @@ class drawFRG : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*drawPaint = Paint().apply {
-            isAntiAlias = true
-            isDither = true
-            style = Paint.Style.STROKE
-            strokeJoin = Paint.Join.ROUND
-            strokeCap = Paint.Cap.ROUND
-        }*/
-
         val textSizeET : TextView = view.findViewById(R.id.textSizeET)
 
         colourPreviewIV = view.findViewById(R.id.colorPreviewIV)
@@ -57,19 +49,6 @@ class drawFRG : Fragment() {
         val setBTN : ImageButton = view.findViewById(R.id.setBTN)
         setBTN.setOnClickListener {
             callback.fromDraw(textSizeET.text.toString().toFloat(), colour)
-
-            /*val setEnableDrawFRG : drawInstructFRG = drawInstructFRG()
-
-            val fragIn : Bundle = Bundle()
-            fragIn.putFloat("size", textSizeET.text.toString().toFloat())
-            fragIn.putInt("colour", colour)
-
-            setEnableDrawFRG.arguments = fragIn
-
-            val openFragment : FragmentTransaction = activity!!.supportFragmentManager.beginTransaction()
-            openFragment.replace(R.id.fragmentLocFrL, setEnableDrawFRG)
-
-            openFragment.commit()*/
         }
     }
 

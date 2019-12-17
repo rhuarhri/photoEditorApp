@@ -34,7 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_done" />
 
-    <EditText
+    <!--<EditText
         android:id="@+id/locationET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,9 +44,9 @@
         android:ems="10"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />-->
 
-    <TextView
+    <!--<TextView
         android:id="@+id/locationTitleTXT"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,18 +54,18 @@
         android:textColor="@color/colorSecondaryText"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/locationET"
-        app:layout_constraintStart_toStartOf="@+id/locationET" />
+        app:layout_constraintStart_toStartOf="@+id/locationET" />-->
 
     <EditText
         android:id="@+id/nameET"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="8dp"
         android:backgroundTint="@color/colorSecondaryText"
         android:ems="10"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/locationTitleTXT"
-        app:layout_constraintStart_toStartOf="@+id/locationTitleTXT" />
+        app:layout_constraintBottom_toTopOf="@+id/savedEditBTN"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/nameTitleTXT"

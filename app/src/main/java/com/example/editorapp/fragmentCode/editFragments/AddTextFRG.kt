@@ -31,7 +31,7 @@ class AddTextFRG : Fragment() {
         }
         catch(e : Exception)
         {
-            Toast.makeText(context, "error is ${e.toString()}", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "error is $e", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -42,8 +42,8 @@ class AddTextFRG : Fragment() {
         super.onActivityCreated(savedInstanceState)
         if (arguments != null)
         {
-            positionY = arguments!!.getInt("posY")!!
-            positionX = arguments!!.getInt("posX")!!
+            positionY = arguments!!.getInt("posY")
+            positionX = arguments!!.getInt("posX")
         }
     }
 

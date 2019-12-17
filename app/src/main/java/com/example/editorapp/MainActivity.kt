@@ -9,20 +9,15 @@ import android.os.Bundle
 import android.view.TextureView
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.camera.core.ImageCapture
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.editorapp.cameraCode.CameraHandler
-import com.example.editorapp.imageHandling.RetrieveImageHandler
 import com.example.editorapp.imageHandling.SaveImageHandler
 import com.example.editorapp.slideShowCode.*
-import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
@@ -53,7 +48,7 @@ class MainActivity : AppCompatActivity(), SlideShowListener{
 
         cameraBTN = findViewById(R.id.cameraBTN)
         cameraBTN.setOnClickListener {
-            val saveImage : SaveImageHandler = SaveImageHandler(applicationContext)
+            val saveImage = SaveImageHandler(applicationContext)
             val photoFile = saveImage.getPhotoFile()
 
 
@@ -63,14 +58,6 @@ class MainActivity : AppCompatActivity(), SlideShowListener{
                     doAsync {
 
                         val goto : Intent = activityViewModel.sendCapturedImage(applicationContext, file)
-                        /*
-                        goto.putExtra("photo", file.absolutePath)
-
-                        val image = RetrieveImageHandler(applicationContext).getBitmapFromFile(file.canonicalPath)
-                        goto.putExtra("height", image.height)
-                        goto.putExtra("width", image.width)
-
-                        goto.putExtra("layer", activityViewModel.getChosenFilterLocation())*/
 
                         uiThread {
 
@@ -117,10 +104,6 @@ class MainActivity : AppCompatActivity(), SlideShowListener{
     }
 
     override fun onItemClick(position: Int) {
-        //val imageGetter: RetrieveImageHandler = RetrieveImageHandler(applicationContext)
-
-        //val chosenFilter : Bitmap = imageGetter.formatBitmapFromResources(activityViewModel.images[position].toInt(), overlayIV.height, overlayIV.width)
-
         overlayIV.setImageBitmap(activityViewModel.setChosenFilter(applicationContext, position, overlayIV.height, overlayIV.width))
     }
 

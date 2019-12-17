@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.*
 import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +14,10 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.editorapp.R
 import com.example.nn4wchallenge.database.external.DataTranslation
-import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-class addGradientFRG : Fragment(), AdapterView.OnItemSelectedListener{
+class AddGradientFRG() : Fragment(), AdapterView.OnItemSelectedListener, Parcelable {
 
     private var gradientType : String = ""
     private var gradientColour : Int = Color.parseColor("#00ffffff")
@@ -36,7 +38,7 @@ class addGradientFRG : Fragment(), AdapterView.OnItemSelectedListener{
         }
         catch(e : Exception)
         {
-            Toast.makeText(context, "error is ${e.toString()}", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "error is $e", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -47,8 +49,8 @@ class addGradientFRG : Fragment(), AdapterView.OnItemSelectedListener{
         super.onActivityCreated(savedInstanceState)
         if (arguments != null)
         {
-            imageHeight = arguments!!.getFloat("height")!!
-            imageWidth = arguments!!.getFloat("width")!!
+            imageHeight = arguments!!.getFloat("height")
+            imageWidth = arguments!!.getFloat("width")
 
             Log.d("gradient code", "got height is $imageHeight got width is $imageWidth")
         }
@@ -63,13 +65,13 @@ class addGradientFRG : Fragment(), AdapterView.OnItemSelectedListener{
     private lateinit var gradientPreview : ImageView
     private fun updatePreview()
     {
-        async {
+        doAsync {
 
             val gradientImage : Bitmap = Bitmap.createBitmap(gradientPreview.width, gradientPreview.height, Bitmap.Config.ARGB_8888)
 
-            var canvas : Canvas = Canvas(gradientImage)
+            val canvas = Canvas(gradientImage)
 
-            val paint : Paint = Paint()
+            val paint = Paint()
             paint.isAntiAlias = true
             paint.shader = createGradient(gradientPreview.height.toFloat(), gradientPreview.width.toFloat())
 
@@ -143,7 +145,7 @@ class addGradientFRG : Fragment(), AdapterView.OnItemSelectedListener{
         applyBTN.setOnClickListener {
 
             if (gradientType != "") {
-                val paintGradient: Paint = Paint()
+                val paintGradient = Paint()
 
                 paintGradient.isAntiAlias = true
 
@@ -165,6 +167,17 @@ class addGradientFRG : Fragment(), AdapterView.OnItemSelectedListener{
     }
 
     private val transparentColour : Int = Color.parseColor("#00ffffff")
+
+    constructor(parcel: Parcel) : this() {
+        gradientType = parcel.readString().toString()
+        gradientColour = parcel.readInt()
+        red = parcel.readInt()
+        green = parcel.readInt()
+        blue = parcel.readInt()
+        imageHeight = parcel.readFloat()
+        imageWidth = parcel.readFloat()
+    }
+
     private fun createGradient(imageHeight : Float, imageWidth : Float) : Shader
     {
         val gradient : Shader =
@@ -194,6 +207,30 @@ class addGradientFRG : Fragment(), AdapterView.OnItemSelectedListener{
         }
 
         return gradient
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(gradientType)
+        parcel.writeInt(gradientColour)
+        parcel.writeInt(red)
+        parcel.writeInt(green)
+        parcel.writeInt(blue)
+        parcel.writeFloat(imageHeight)
+        parcel.writeFloat(imageWidth)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<AddGradientFRG> {
+        override fun createFromParcel(parcel: Parcel): AddGradientFRG {
+            return AddGradientFRG(parcel)
+        }
+
+        override fun newArray(size: Int): Array<AddGradientFRG?> {
+            return arrayOfNulls(size)
+        }
     }
 
 }
