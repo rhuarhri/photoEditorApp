@@ -17,7 +17,7 @@ import com.example.editorapp.slideShowCode.ShowLayerAdapter
 import com.example.editorapp.slideShowCode.ShowLayerListener
 
 
-class LayerFRG : Fragment(), ShowLayerListener {
+class layerFRG : Fragment(), ShowLayerListener {
 
     private lateinit var appContext: Context
 

@@ -11,8 +11,7 @@ import android.widget.ImageView
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProviders
 import com.example.editorapp.fragmentCode.editFragments.*
-import com.example.editorapp.fragmentCode.editFragments.drawFragments.DrawFRG
-import com.example.editorapp.fragmentCode.editFragments.drawFragments.DrawInstructFRG
+import com.example.editorapp.fragmentCode.editFragments.drawFragments.*
 import com.example.editorapp.imageEditing.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -88,7 +87,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
     }
 
-    private val layerFRG : LayerFRG = LayerFRG()
+    private val layerFRG : layerFRG = layerFRG()
     fun layersNav(view : View)
     {
         val fragIn = Bundle()
@@ -142,7 +141,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
     }
 
     private val selector : ImageSelection = ImageSelection()
-    private val selectFRG : SelectFRG = SelectFRG()
+    private val selectFRG : selectFRG = selectFRG()
     fun selectImage(view : View)
     {
         selector.setPosition(positionX, positionY)
@@ -168,7 +167,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         }
     }
 
-    private val filterFRG : FilterFRG = FilterFRG()
+    private val filterFRG : filterFRG = filterFRG()
     fun addFilter(view : View)
     {
         val fragIn = Bundle()
@@ -263,7 +262,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         }
     }
 
-    private val cropFRG : CropFRG = CropFRG()
+    private val cropFRG : cropFRG = cropFRG()
     fun cropImage(view : View)
     {
         val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -287,7 +286,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
 
     }
 
-    private val rotateImageFRG : RotateFRG = RotateFRG()
+    private val rotateImageFRG : rotateFRG = rotateFRG()
     fun rotateImage(view : View)
     {
         val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()
@@ -341,7 +340,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         activityVM.addToHistory(activityVM.currentImage)
     }
 
-    private val addGradientFRG : AddGradientFRG = AddGradientFRG()
+    private val addGradientFRG : addGradientFRG = addGradientFRG()
     fun addGradient(view : View)
     {
         val fragIn = Bundle()
@@ -373,7 +372,7 @@ class ImagePreviewActivity : AppCompatActivity(), FromFragment {
         }
     }
 
-    private val blurFRG : BlurFRG = BlurFRG()
+    private val blurFRG : blurFRG = blurFRG()
     fun blurImage(view : View)
     {
         val openFragment : FragmentTransaction = supportFragmentManager.beginTransaction()

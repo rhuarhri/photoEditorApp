@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.editorapp.R
 
-class SelectFRG : Fragment() {
+class selectFRG : Fragment() {
 
     /*
     This just tells the user that they can select part of the image

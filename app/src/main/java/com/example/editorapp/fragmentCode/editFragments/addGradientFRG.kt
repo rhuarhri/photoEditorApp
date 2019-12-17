@@ -17,7 +17,7 @@ import com.example.nn4wchallenge.database.external.DataTranslation
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-class AddGradientFRG() : Fragment(), AdapterView.OnItemSelectedListener, Parcelable {
+class addGradientFRG() : Fragment(), AdapterView.OnItemSelectedListener, Parcelable {
 
     private var gradientType : String = ""
     private var gradientColour : Int = Color.parseColor("#00ffffff")
@@ -223,12 +223,12 @@ class AddGradientFRG() : Fragment(), AdapterView.OnItemSelectedListener, Parcela
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<AddGradientFRG> {
-        override fun createFromParcel(parcel: Parcel): AddGradientFRG {
-            return AddGradientFRG(parcel)
+    companion object CREATOR : Parcelable.Creator<addGradientFRG> {
+        override fun createFromParcel(parcel: Parcel): addGradientFRG {
+            return addGradientFRG(parcel)
         }
 
-        override fun newArray(size: Int): Array<AddGradientFRG?> {
+        override fun newArray(size: Int): Array<addGradientFRG?> {
             return arrayOfNulls(size)
         }
     }

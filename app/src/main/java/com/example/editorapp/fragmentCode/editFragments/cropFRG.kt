@@ -11,7 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.editorapp.R
 
-class CropFRG : Fragment() {
+class cropFRG : Fragment() {
 
     public val shapeColour : String = "#000000"
 

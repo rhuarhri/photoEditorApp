@@ -21,7 +21,7 @@ import com.example.editorapp.slideShowCode.SlideShowListener
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.uiThread
 
-class FilterFRG : Fragment(), SlideShowListener {
+class filterFRG : Fragment(), SlideShowListener {
 
     private lateinit var appContext: Context
 
